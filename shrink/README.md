@@ -29,7 +29,7 @@ key-signed checksum manifest plus artifact SHA-256, and caches it under
 npx -y cstman-shrink lint tools.json
 ```
 
-npm launcher and downloaded binary are both Apache-2.0; see `BINARY_LICENSE.md`.
+npm launcher and downloaded binary are both MIT; see `BINARY_LICENSE.md`.
 
 ## Guarantees
 

@@ -2,7 +2,7 @@
   "name": "@cstman-ai/middleware",
   "version": "1.1.0",
   "description": "Native framework middleware over the CSTMAN compression runtime.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JuliusBrussee/cstman.git",

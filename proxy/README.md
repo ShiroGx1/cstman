@@ -7,7 +7,7 @@ the original bytes are forwarded unchanged. Standalone records truthful per-requ
 spend to `~/.cstman/cstman.db` and only ever labels savings `inferred` — never
 `verified`.
 
-Source and binaries ship under Apache-2.0. See `LICENSE` and `../LICENSING.md`.
+Source and binaries ship under MIT. See `LICENSE` and `../LICENSING.md`.
 
 ```bash
 go build ./proxy/...                 # build

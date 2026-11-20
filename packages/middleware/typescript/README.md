@@ -85,4 +85,4 @@ Close the runtime client and native framework/provider resources at shutdown. Cl
 
 ## Licence and support
 
-The client, adapters, and Engine runtime are all Apache-2.0. Read [LICENSING.md](https://github.com/JuliusBrussee/cstman/blob/main/LICENSING.md). This package is separate from CSTMAN Agent SDK. File sanitized reproducible issues in [CSTMAN](https://github.com/JuliusBrussee/cstman/issues).
+The client, adapters, and Engine runtime are all MIT. Read [LICENSING.md](https://github.com/JuliusBrussee/cstman/blob/main/LICENSING.md). This package is separate from CSTMAN Agent SDK. File sanitized reproducible issues in [CSTMAN](https://github.com/JuliusBrussee/cstman/issues).

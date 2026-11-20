@@ -2,7 +2,7 @@
   "name": "@cstman-ai/pi",
   "version": "0.3.2",
   "description": "Native CSTMAN extension for the Pi coding agent \u2014 proxy routing, exact-recovery cstman_retrieve tool, native lifecycle events, Core injection, and tool-output shrinking.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",

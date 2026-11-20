@@ -1,5 +1,5 @@
 # Downloaded binary license
 
 The npm launcher files, the `cstman-mcp` Go source, and the official binary
-are all licensed under Apache-2.0; see `LICENSE.launcher` (identical to the
+are all licensed under MIT; see `LICENSE.launcher` (identical to the
 repository `LICENSE`) and the repository `NOTICE` and `LICENSING.md`.

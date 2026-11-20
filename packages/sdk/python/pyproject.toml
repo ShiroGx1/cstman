@@ -9,7 +9,7 @@ name = "cstman-sdk"
 version = "1.2.0"
 description = "Stdlib-only Python client for CSTMAN gateway tracing, tool deferral, checkpoints, and recoverable compression."
 readme = "README.md"
-license = "Apache-2.0"
+license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.11"
 dependencies = []

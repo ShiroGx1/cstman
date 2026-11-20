@@ -9,7 +9,7 @@
 <a href="https://github.com/JuliusBrussee/cstman/stargazers"><img src="https://img.shields.io/github/stars/JuliusBrussee/cstman?style=flat-square&color=F0A63C&label=stars" alt="GitHub stars"></a>
 <a href="https://www.npmjs.com/package/cstman"><img src="https://img.shields.io/npm/dm/cstman?style=flat-square&color=F0A63C&label=cli%20downloads" alt="npm downloads"></a>
 <a href="./INSTALL.md"><img src="https://img.shields.io/badge/works_with-30%2B_agents-orange?style=flat-square" alt="30+ agents"></a>
-<a href="#license"><img src="https://img.shields.io/badge/license-Apache--2.0-green?style=flat-square" alt="License"></a>
+<a href="#license"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License"></a>
 
 <table>
 <tr>
@@ -332,7 +332,7 @@ The full list, and how to delete sent telemetry: [SECURITY.md](./SECURITY.md).
 
 ## License
 
-[Apache-2.0](./LICENSE), whole repo. Read it, fork it, ship it, host it. Free like mammoth on open plain. Older releases and third-party notices: [LICENSING.md](./LICENSING.md). "CSTMAN" and the rock logo are trademarks of Julius Brussee.
+[MIT](./LICENSE) for this fork's source and packages. Third-party code keeps its own terms. Read [LICENSING.md](./LICENSING.md), then fork, ship, or host it. "CSTMAN" and the rock logo are trademarks of Julius Brussee.
 
 ## Cite
 

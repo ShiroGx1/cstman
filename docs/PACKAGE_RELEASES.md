@@ -152,7 +152,7 @@ SDK, middleware, and contracts changelogs to be the package version).
 signs `checksums.txt` with the pinned release key (`checksums.txt.keysig`). The
 CLI and the npm launchers check that signature against the public key compiled
 into them before installing any binary. The signed manifest also covers the
-license files attached to every binary release: `LICENSE` (Apache-2.0),
+license files attached to every binary release: `LICENSE` (MIT),
 `LICENSE-MIT` (the pre-3.0.0 MIT text), `NOTICE`, `LICENSING.md`, the third-party notices for the embedded pixel renderer,
 its fonts, and `cstman-browse`, the notices for what `zig cc` links into the
 cgo binaries (`LICENSE.zig`, `COPYRIGHT.musl`, `COPYING.mingw-w64`), and
@@ -217,7 +217,7 @@ its kind, defaults and every platform build's SHA-256. Both are listed in
 refuses a `modules.json` the signed manifest does not list byte for byte.
 
 The container image carries OCI labels (`org.opencontainers.image.source`,
-`version`, `revision`, `licenses` = `Apache-2.0`, `title`, `description`), ships the
+`version`, `revision`, `licenses` = `MIT`, `title`, `description`), ships the
 license texts under `/licenses/` (third-party Go modules under
 `/licenses/third_party/`, from the same pinned `go-licenses`), has buildx SBOM and provenance attestations,
 and is signed keyless with cosign through GitHub OIDC. The `:latest` tag moves
@@ -346,7 +346,7 @@ still comes from CI with provenance:
 ```sh
 dir="$(mktemp -d)" && cd "$dir"
 cat > package.json <<'EOF'
-{"name":"@cstman-ai/contracts","version":"0.0.0-bootstrap.0","description":"Name placeholder for trusted publishing. Use 2.0.0 or later.","license":"Apache-2.0","repository":{"type":"git","url":"git+https://github.com/JuliusBrussee/cstman.git","directory":"packages/shared/contracts"}}
+{"name":"@cstman-ai/contracts","version":"0.0.0-bootstrap.0","description":"Name placeholder for trusted publishing. Use 2.0.0 or later.","license":"MIT","repository":{"type":"git","url":"git+https://github.com/JuliusBrussee/cstman.git","directory":"packages/shared/contracts"}}
 EOF
 npm login                       # interactive, 2FA; no token is stored in CI
 npm publish --access public --tag bootstrap
@@ -492,7 +492,7 @@ agents cannot change these):
 - npm trusted publishers for `cstman` and (after the bootstrap
   publish) `@cstman-ai/contracts`.
 - The docs.caveman.so pages: middleware 1.0 / SDK 1.2 install lines, the
-  Apache-2.0 license, and the pages the package READMEs link.
+  MIT license, and the pages the package READMEs link.
 - The same Apache-2.0 relicense in `cstman-browse` (source of `browse/`;
   otherwise the next sync reverts it) and in the Agent SDK's own repository.
 

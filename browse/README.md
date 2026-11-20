@@ -12,7 +12,7 @@ the CSTMAN engine's forced-only `a11y` compressor, and exposes four tools:
 Savings are always `inferred`. Recovery is CCR-backed: `browser_recover` returns
 the byte-exact original AX payload for a snapshot handle.
 
-Source and binaries ship under Apache-2.0. See `LICENSE` and `../LICENSING.md`.
+Source and binaries ship under MIT. See `LICENSE` and `../LICENSING.md`.
 
 `browser_snapshot.query` is the token-efficient path on large pages. It keeps
 best matching accessible nodes and ancestors while CCR retains full raw tree;

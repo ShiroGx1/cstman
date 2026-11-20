@@ -7,8 +7,8 @@
     "summary": "Compression-only runtime used by CSTMAN framework middleware. Normative prose: docs/technical/middleware-protocol.md.",
     "description": "Status codes listed are the protocol 1.1 set, used only when the request carries the http_status_v2 feature in CSTMAN-Middleware-Features. Without it the runtime answers with the protocol 1.0 (legacy) mapping documented in the prose spec. Clients derive outcomes from error.code, never from the status alone. The referenced JSON Schemas are closed: they describe exactly what a protocol 1.1 server emits and are what the conformance kit checks servers against. Clients MUST NOT validate responses against them; clients ignore unknown response fields so later minor versions can add fields (spec §4, §16). Unknown routes and unlisted methods answer 404 not_found before any quota, queue or body handling.",
     "license": {
-      "name": "Apache-2.0",
-      "identifier": "Apache-2.0"
+      "name": "MIT",
+      "identifier": "MIT"
     }
   },
   "servers": [

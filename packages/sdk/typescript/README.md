@@ -1,6 +1,6 @@
 # @cstman-ai/sdk
 
-`@cstman-ai/sdk` is the Apache-2.0-licensed TypeScript client in the main CSTMAN repository. It ships ESM and TypeScript declarations with no runtime dependencies. This quickstart uses published version `1.2.0` on Node.js 22.13 or newer.
+`@cstman-ai/sdk` is the MIT-licensed TypeScript client in the main CSTMAN repository. It ships ESM and TypeScript declarations with no runtime dependencies. This quickstart uses published version `1.2.0` on Node.js 22.13 or newer.
 
 ## Install
 

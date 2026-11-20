@@ -1,4 +1,4 @@
-# shrink — cstman-shrink, the tool-catalog compressor (Go core + launcher, Apache-2.0)
+# shrink — cstman-shrink, the tool-catalog compressor (Go core + launcher, MIT)
 
 Compress MCP/OpenAI **tool definitions** before they fill the context window. A thin Go wrapper
 over the [engine](../engine/CLAUDE.md)'s `toolschema` compressor: it drops annotation metadata

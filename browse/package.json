@@ -2,7 +2,7 @@
   "name": "cstman-browse",
   "version": "2.0.0",
   "description": "CSTMAN browser driver — compressed accessibility snapshots, uid actions, CCR recovery. Local-only, inferred-only.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "cstman-browse": "bin/cstman-browse.mjs"

@@ -227,7 +227,7 @@ jobs:
           done
           tar -C "$bundle" --sort=name --mtime=@0 --owner=0 --group=0 --numeric-owner -cf - . \
             | gzip -n > dist/licenses/THIRD_PARTY_GO_LICENSES.tar.gz
-      # Every binary is Apache-2.0 and embeds MIT pixel/font-licensed code,
+      # Every binary is MIT and embeds separately licensed pixel/font code,
       # so the license texts ship with the release and sit in the signed manifest.
       - name: Add license and notice files to the release set
         run: |
@@ -330,7 +330,7 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --latest=false \
             --title "$GITHUB_REF_NAME" \
-            --notes "Signed CSTMAN runtime companions for macOS, Linux, and Windows. The binaries are licensed under the Apache License 2.0 (LICENSE, NOTICE); see LICENSING.md and the attached third-party notices. The ghcr.io cstman-proxy image is still built without cgo, so its code compressor handles Go source only; the cstman-proxy and cstman-engine binaries here also compress TypeScript, JavaScript, Python, Rust, Java and C/C++."
+            --notes "Signed CSTMAN runtime companions for macOS, Linux, and Windows. The binaries are licensed under MIT (LICENSE, NOTICE); see LICENSING.md and the attached third-party notices. The ghcr.io cstman-proxy image is still built without cgo, so its code compressor handles Go source only; the cstman-proxy and cstman-engine binaries here also compress TypeScript, JavaScript, Python, Rust, Java and C/C++."
       # Last: `latest` moves only to an image that is signed and whose release
       # exists. Same digest as the version tag; no rebuild. Only a stable tag
       # that is the highest stable bin-v* moves it, so an older-line patch or a

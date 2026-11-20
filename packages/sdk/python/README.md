@@ -1,6 +1,6 @@
 # cstman-sdk
 
-`cstman-sdk` is the Apache-2.0-licensed Python client in the main CSTMAN repository. Import it as `cstman_cloud`. It requires Python 3.11 or newer, uses only the standard library at runtime, and includes `py.typed` type information.
+`cstman-sdk` is the MIT-licensed Python client in the main CSTMAN repository. Import it as `cstman_cloud`. It requires Python 3.11 or newer, uses only the standard library at runtime, and includes `py.typed` type information.
 
 ## Install
 

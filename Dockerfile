@@ -59,9 +59,9 @@ LABEL org.opencontainers.image.title="cstman-proxy" \
       org.opencontainers.image.source="$SOURCE" \
       org.opencontainers.image.version="$VERSION" \
       org.opencontainers.image.revision="$REVISION" \
-      org.opencontainers.image.licenses="Apache-2.0"
+      org.opencontainers.image.licenses="MIT"
 COPY --from=build /out/cstman-proxy /cstman-proxy
-# The binary is Apache-2.0 and embeds MIT pixel and font-licensed atlas assets;
+# The binary is MIT and embeds separately licensed pixel and font assets;
 # their license texts and notices ship with every copy.
 COPY LICENSE LICENSE-MIT NOTICE LICENSING.md /licenses/
 COPY engine/pixel/NOTICE /licenses/NOTICE.engine-pixel

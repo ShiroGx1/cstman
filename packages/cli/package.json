@@ -2,7 +2,7 @@
   "name": "cstman",
   "version": "4.1.0",
   "description": "CSTMAN CLI — wrap coding agents with recoverable local context compression and truthful metering (`cstman claude`), then drive CSTMAN Cloud from terminal. Compression and metering run in companion Go binaries: run `cstman setup` to see install state. Local savings stay inferred until verified.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",

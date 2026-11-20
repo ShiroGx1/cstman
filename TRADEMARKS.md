@@ -3,9 +3,9 @@
 "CSTMAN" — the name, the wordmark, and the rock logo — is a trademark of Julius
 Brussee. Trademark applications are pending (Nice Classes 9 and 42).
 
-Software is licensed under Apache-2.0. **Code license — see
+Software is licensed under MIT. **Code license — see
 [LICENSING.md](LICENSING.md) — grants code rights, not rights to CSTMAN name or
-logo.** Apache-2.0 grants no trademark rights.
+logo.** MIT grants no trademark rights.
 
 ## What's fine (no permission needed)
 
@@ -26,7 +26,7 @@ logo.** Apache-2.0 grants no trademark rights.
 
 ## Why this exists
 
-Trademark is separate from both the Apache-2.0 code and commercial CSTMAN
+Trademark is separate from both the MIT code and commercial CSTMAN
 Cloud. Anyone can run code within its license; only the
 real thing gets to be called CSTMAN. Misuse of the marks terminates your license
 to use them (the code license is unaffected, but the confusion isn't allowed to

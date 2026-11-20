@@ -9,15 +9,15 @@ independently.
 
 | Layer | Job | Account | License |
 |---|---|---|---|
-| Skill, hooks, and plugins | Ask an agent to answer with less filler while preserving technical text | No | Apache-2.0 |
-| CLI | Install components, launch agents, expose local commands, and connect optional hosted commands | No for local commands | Apache-2.0 |
-| Engine | Detect payload shape, apply a matching transform, count estimated tokens, and store recoveries | No | Apache-2.0 |
-| Local proxy | Route provider requests through Engine and write local usage rows | No | Apache-2.0 |
-| MCP, memory, browser, and shrink binaries | Expose recovery and specialized local context tools | No | Apache-2.0 |
-| SDKs and middleware | Add compression, context assembly, tools, tracing, and provider routing to application code | Local use needs no account | Apache-2.0 |
-| Connected commands | Access an authenticated hosted project | Yes | CLI remains Apache-2.0 |
+| Skill, hooks, and plugins | Ask an agent to answer with less filler while preserving technical text | No | MIT |
+| CLI | Install components, launch agents, expose local commands, and connect optional hosted commands | No for local commands | MIT |
+| Engine | Detect payload shape, apply a matching transform, count estimated tokens, and store recoveries | No | MIT |
+| Local proxy | Route provider requests through Engine and write local usage rows | No | MIT |
+| MCP, memory, browser, and shrink binaries | Expose recovery and specialized local context tools | No | MIT |
+| SDKs and middleware | Add compression, context assembly, tools, tracing, and provider routing to application code | Local use needs no account | MIT |
+| Connected commands | Access an authenticated hosted project | Yes | CLI remains MIT |
 
-The whole repository is Apache-2.0; see [`LICENSING.md`](../../LICENSING.md).
+The whole repository is MIT; see [`LICENSING.md`](../../LICENSING.md).
 
 ## Response compression
 

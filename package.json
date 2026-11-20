@@ -2,7 +2,7 @@
   "name": "cstman-installer",
   "version": "4.1.0",
   "description": "CSTMAN installer — detects your AI coding agents and installs cstman for each one.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "author": "Julius Brussee",
   "homepage": "https://github.com/JuliusBrussee/cstman",
   "repository": {

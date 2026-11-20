@@ -7,7 +7,7 @@ name = "cstman-middleware"
 version = "1.0.1"
 description = "Native framework adapters for the CSTMAN compression runtime."
 readme = "README.md"
-license = "Apache-2.0"
+license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.11"
 dependencies = ["cstman-sdk>=1.2,<2"]

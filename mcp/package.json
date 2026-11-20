@@ -2,7 +2,7 @@
   "name": "cstman-mcp",
   "version": "2.0.0",
   "description": "CSTMAN MCP server — compress/retrieve/stats compression tools over stdio. Local-only, inferred-only.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "cstman-mcp": "bin/cstman-mcp.mjs"

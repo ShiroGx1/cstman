@@ -8,7 +8,7 @@ conservative threshold and compresses each hit through the
 detail stays recoverable. Counts are inferred; component never claims `verified`
 savings.
 
-Go core, binary, and thin JS/Python clients ship under Apache-2.0. See
+Go core, binary, and thin JS/Python clients ship under MIT. See
 `LICENSE` and `../LICENSING.md`.
 
 ## CLI

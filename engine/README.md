@@ -78,7 +78,7 @@ duplicate repository maps and expiring typed objects of long-ended sessions
 transforms fail closed to original-byte pass-through. Blob handles are never
 evicted.
 
-Engine source ships under Apache-2.0, like the rest of the repository. See
+Engine source ships under MIT, like the rest of the repository. See
 `LICENSE` and `../LICENSING.md`.
 
 Build/test inside this repository:

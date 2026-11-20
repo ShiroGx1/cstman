@@ -22,9 +22,9 @@ That appends a `Signed-off-by: Your Name <your@email>` trailer. No CLA, no forms
 
 ## Licensing of contributions
 
-Whole repo is [Apache-2.0](LICENSE) (see [LICENSING.md](LICENSING.md)).
-Contributions are inbound = outbound: you license your change under the same
-Apache-2.0 terms. Simple.
+First-party source is [MIT](LICENSE) (see [LICENSING.md](LICENSING.md)); third-party
+components keep their own terms. Contributions to this fork are licensed under
+the same MIT terms.
 
 ## Where changes land
 

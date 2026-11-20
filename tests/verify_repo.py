@@ -971,19 +971,16 @@ def verify_hook_install_flow() -> None:
 def verify_license_boundaries() -> None:
     section("License Boundaries")
 
-    # Whole repo is Apache-2.0 from CSTMAN 3.0.0. Root LICENSE is the verbatim
-    # apache.org text (sha256 of the LF form); every other tracked LICENSE or
-    # LICENSE.* is a byte copy. Upstream third-party texts are named NOTICE or
-    # *_LICENSE.txt and are not matched.
-    apache = (ROOT / "LICENSE").read_bytes().replace(b"\r\n", b"\n")
+    # First-party source is MIT in this fork. Every tracked project LICENSE or
+    # LICENSE.* is a byte copy; third-party texts use NOTICE or *_LICENSE.txt.
+    mit = (ROOT / "LICENSE").read_bytes().replace(b"\r\n", b"\n")
     ensure(
-        hashlib.sha256(apache).hexdigest() == "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
-        "root LICENSE is not the canonical Apache License 2.0 text",
+        hashlib.sha256(mit).hexdigest() == "c86460a5c7c041bff74bcfacc33a0eedbc2cbb7d0be1ead757ba11e78799dd0e",
+        "root LICENSE is not the selected MIT License text",
     )
     notice = (ROOT / "NOTICE").read_text(encoding="utf-8")
     ensure("Copyright 2026 Julius Brussee" in notice, "root NOTICE missing copyright line")
-    # Pre-3.0.0 contributions to the formerly MIT parts keep their MIT notice:
-    # LICENSE-MIT is that verbatim text (not matched by the LICENSE copy check).
+    # Preserve the historical MIT text referenced by the upstream NOTICE.
     ensure(
         hashlib.sha256((ROOT / "LICENSE-MIT").read_bytes().replace(b"\r\n", b"\n")).hexdigest()
         == "5eb826cd03151bcc7cce3f80d40e87733237fedfc6c36d6908aca5fd650a0bdb",
@@ -997,8 +994,8 @@ def verify_license_boundaries() -> None:
         if re.fullmatch(r"LICENSE(\.[^/]+)?", Path(p).name) and "vendor" not in Path(p).parts
     ]
     checked = license_files
-    mismatched = sorted(p for p in checked if (ROOT / p).read_bytes().replace(b"\r\n", b"\n") != apache)
-    ensure(not mismatched, f"LICENSE files differ from root Apache-2.0 LICENSE: {mismatched}")
+    mismatched = sorted(p for p in checked if (ROOT / p).read_bytes().replace(b"\r\n", b"\n") != mit)
+    ensure(not mismatched, f"LICENSE files differ from root MIT LICENSE: {mismatched}")
     for relative in ("engine", "proxy", "browse", "mcp", "shrink", "mem", "shared/platform"):
         ensure((ROOT / relative / "LICENSE").is_file(), f"runtime directory missing LICENSE: {relative}")
 
@@ -1013,9 +1010,9 @@ def verify_license_boundaries() -> None:
             declared = match.group(1) if match else None
         else:
             declared = json.loads(text).get("license")
-        if declared is not None and declared != "Apache-2.0":
+        if declared is not None and declared != "MIT":
             wrong_metadata.append(f"{p}={declared}")
-    ensure(not wrong_metadata, f"license metadata must be Apache-2.0: {wrong_metadata}")
+    ensure(not wrong_metadata, f"license metadata must be MIT: {wrong_metadata}")
 
     # The old split license survives only as history.
     history = {"LICENSING.md", "tests/verify_repo.py"}
@@ -1033,9 +1030,9 @@ def verify_license_boundaries() -> None:
     ensure(not leftovers, f"BSL license text outside history files: {leftovers}")
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    ensure("[Apache-2.0](./LICENSE)" in readme, "README license section must name Apache-2.0")
+    ensure("[MIT](./LICENSE)" in readme, "README license section must name MIT")
 
-    print(f"{len(checked)} LICENSE files match root Apache-2.0 text; no BSL text outside history")
+    print(f"{len(checked)} LICENSE files match root MIT text; no BSL text outside history")
 
 
 def _top_changelog_version(path: Path) -> str:

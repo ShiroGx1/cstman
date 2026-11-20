@@ -2,7 +2,7 @@
   "name": "@cstman-ai/contracts",
   "version": "2.1.0",
   "description": "JSON Schema and OpenAPI wire contracts for CSTMAN, including the framework middleware protocol.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",

@@ -5,7 +5,7 @@ model context. It detects input shape, chooses a matching compressor, stores
 exact source when a lossy transform needs recovery, and emits output only when
 the result passes size and safety checks.
 
-Engine source is licensed under Apache-2.0, like the rest of the repository. See
+Engine source is licensed under MIT, like the rest of the repository. See
 [`LICENSING.md`](../../LICENSING.md).
 
 ## Library calls

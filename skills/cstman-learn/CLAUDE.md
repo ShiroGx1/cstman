@@ -1,4 +1,4 @@
-# skills/cstman-learn — the CSTMAN Learn editing skill (Apache-2.0, public)
+# skills/cstman-learn — the CSTMAN Learn editing skill (MIT, public)
 
 The consent-gated half of `cstman learn`. The analyzer (the Go proxy) **measures**
 where an agent's tokens go and writes a ranked plan; this skill is what an agent

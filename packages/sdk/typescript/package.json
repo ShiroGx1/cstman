@@ -2,7 +2,7 @@
   "name": "@cstman-ai/sdk",
   "version": "1.2.0",
   "description": "Zero-dependency TypeScript client for CSTMAN gateway tracing, tool deferral, checkpoints, and recoverable compression.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

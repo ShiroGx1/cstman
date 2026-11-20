@@ -8,7 +8,8 @@ AI coding harness through an existing wire protocol and hook surface.
 
 ## License boundary
 
-The whole repository, profiles and Engine-linked runtime alike, is Apache-2.0.
+First-party source, profiles and Engine-linked runtime are MIT; third-party
+components retain their own license terms.
 Contribution terms are in [`CONTRIBUTING.md`](../CONTRIBUTING.md) and
 [`LICENSING.md`](../LICENSING.md).
 
