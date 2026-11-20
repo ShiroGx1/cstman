@@ -15,7 +15,7 @@ if [ -f "$SCRIPT_DIR/../../installer/lib/settings.js" ]; then
   SETTINGS_HELPER="$SCRIPT_DIR/../../installer/lib/settings.js"
 fi
 
-HOOK_FILES=("package.json" "cstman-config.js" "cstman-parse.js" "cstman-activate.js" "cstman-mode-tracker.js" "cstman-stats.js" "cstman-statusline.sh" "cavecrew-model-overrides.js")
+HOOK_FILES=("package.json" "cstman-config.js" "cstman-parse.js" "cstman-activate.js" "cstman-mode-tracker.js" "cstman-stats.js" "cstman-statusline.sh" "cstcrew-model-overrides.js")
 
 # Detect if cstman is installed as a plugin (check plugin cache)
 PLUGIN_INSTALLED=0

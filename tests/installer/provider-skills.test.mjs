@@ -12,7 +12,7 @@ function fixture(t) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'cstman vendor skills '));
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
   const repoRoot = path.join(directory, 'repo');
-  for (const name of ['cstman', 'cavecrew']) {
+  for (const name of ['cstman', 'cstcrew']) {
     const skill = path.join(repoRoot, 'skills', name);
     fs.mkdirSync(path.join(skill, 'references'), { recursive: true });
     fs.writeFileSync(path.join(skill, 'SKILL.md'), `---\nname: ${name}\ndescription: Fixture\n---\nOriginal ${name}\n`);
@@ -94,9 +94,9 @@ test('same-name foreign skills require force and are restored on uninstall', (t)
   fs.writeFileSync(file, 'User skill');
   assert.throws(() => providerSkills.install({ provider: 'continue', ...f }), /ownership conflict/);
   assert.equal(fs.readFileSync(file, 'utf8'), 'User skill');
-  assert.equal(fs.existsSync(path.join(f.root, 'cavecrew')), false, 'preflight must prevent partial conflict installs');
+  assert.equal(fs.existsSync(path.join(f.root, 'cstcrew')), false, 'preflight must prevent partial conflict installs');
   providerSkills.install({ provider: 'continue', ...f, force: true });
-  assert.deepEqual(fs.readdirSync(f.root).sort(), ['cavecrew', 'cstman'], 'backups must stay outside recursive skill discovery');
+  assert.deepEqual(fs.readdirSync(f.root).sort(), ['cstcrew', 'cstman'], 'backups must stay outside recursive skill discovery');
   providerSkills.uninstall({ provider: 'continue', root: f.root });
   assert.equal(fs.readFileSync(file, 'utf8'), 'User skill');
 });

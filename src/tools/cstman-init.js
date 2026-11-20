@@ -29,7 +29,7 @@ Rules:
 - User's language: Compress the style, not the language.
 - Never perform cstman: No "cstman mode on", no "me think", no "CSTMAN:" prefix, no normal answer plus cstman copy.
 
-Switch: /cstman (default), /ultracave (fragments, each fact once), /megacave (Classical Chinese 文言文)
+Switch: /cstman (default), /ultracst (fragments, each fact once), /megacst (Classical Chinese 文言文)
 Stop: "stop cstman" or "normal mode"
 
 Auto-Clarity: plain prose for security warnings, irreversible actions, step order a fragment could scramble, user confused, questions you ask the user. Resume after.

@@ -22,7 +22,7 @@ const fs = require('fs');
 const path = require('path');
 
 const OUTPUT_KEYS = { cursor: 'additional_context', copilot: 'additionalContext' };
-const RULESET_MODES = ['cstman', 'ultracave', 'megacave'];
+const RULESET_MODES = ['cstman', 'ultracst', 'megacst'];
 const PAYLOAD_WATCHDOG_MS = 2000;
 
 function sessionContext(payload) {

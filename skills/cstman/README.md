@@ -7,15 +7,15 @@ Talk like smart cstman. Same brain, fewer tokens.
 Makes the model answer first and cut the ceremony: no greeting, hedging,
 filler, recap, or closer. Articles drop when the sentence still reads in one
 pass. Code, commands, paths, numbers, and exact error strings never change.
-Result depends on model and workload. Measured once on the 3.1.0 skill text (`evals/snapshots/results.json`: claude-opus-5-5, ten prompts, single run, output length only, tiktoken o200k approximation): cstman 3% fewer output tokens at the median than a plain `Answer concisely.` control, inside the noise; ultracave 35%; megacave 9%. No quality-equivalence claim is published. Mode persists until changed or stopped.
+Result depends on model and workload. Measured once on the 3.1.0 skill text (`evals/snapshots/results.json`: claude-opus-5-5, ten prompts, single run, output length only, tiktoken o200k approximation): cstman 3% fewer output tokens at the median than a plain `Answer concisely.` control, inside the noise; ultracst 35%; megacst 9%. No quality-equivalence claim is published. Mode persists until changed or stopped.
 
 CSTMAN is one of three sibling skills:
 
 | Skill | Command | What change |
 |-------|---------|-------------|
 | `cstman` | `/cstman` | The voice. Default. Answer first, fluff gone, every fact kept. |
-| `ultracave` | `/ultracave` | Grammar stripped. Fragments, one word when one word is enough, each fact once. |
-| `megacave` | `/megacave` | Classical Chinese (文言文). Far fewer characters, technical terms verbatim. |
+| `ultracst` | `/ultracst` | Grammar stripped. Fragments, one word when one word is enough, each fact once. |
+| `megacst` | `/megacst` | Classical Chinese (文言文). Far fewer characters, technical terms verbatim. |
 
 `/cstman ultra` and `/cstman wenyan` still work as aliases.
 
@@ -28,8 +28,8 @@ and a user who repeats a question. Resumes after the clear part.
 ```
 /cstman              # the voice (default)
 /cstman status       # show current mode without changing it
-/ultracave            # grammar stripped
-/megacave             # classical Chinese
+/ultracst            # grammar stripped
+/megacst             # classical Chinese
 stop cstman          # back to normal prose
 ```
 
@@ -40,7 +40,7 @@ Want Claude Code sessions to start with normal prose? Set
 `{"defaultMode":"manual"}` in `.cstman.json` for one project or
 `~/.config/cstman/config.json` for your user. You can also set
 `CSTMAN_DEFAULT_MODE=manual`. Then `/cstman` activates the voice and
-`/ultracave` selects ultracave. Stop persists across compaction and resume; a
+`/ultracst` selects ultracst. Stop persists across compaction and resume; a
 fresh session starts off again. This startup policy is Claude Code-only:
 OpenCode keeps its cstman default because the installer also supplies static
 activation rules.
@@ -55,14 +55,14 @@ Normal prose:
 cstman:
 > New object ref each render, so React re-renders. Wrap the prop in `useMemo`.
 
-ultracave:
+ultracst:
 > Inline object prop, new ref, re-render. `useMemo`.
 
-megacave:
+megacst:
 > 每繪新生對象參照，故重繪；以 `useMemo` 包之則免。
 
 ## See also
 
 - [`SKILL.md`](./SKILL.md): full LLM-facing instructions
-- [`../ultracave/`](../ultracave/) and [`../megacave/`](../megacave/): the sibling skills
+- [`../ultracst/`](../ultracst/) and [`../megacst/`](../megacst/): the sibling skills
 - [CSTMAN README](../../README.md): repo overview, install, benchmarks

@@ -76,9 +76,9 @@ if ($Mode -eq "off") { exit 0 }
 # mirrors; they render as the skill they became. Anything else → render nothing.
 $Badges = @{
     'caveman' = 'CSTMAN'; 'cstman' = 'CSTMAN'; 'lite' = 'CSTMAN'; 'full' = 'CSTMAN'
-    'ultracave' = 'ULTRACAVE'; 'ultra' = 'ULTRACAVE'
-    'megacave' = 'MEGACAVE'; 'wenyan' = 'MEGACAVE'; 'wenyan-lite' = 'MEGACAVE'
-    'wenyan-full' = 'MEGACAVE'; 'wenyan-ultra' = 'MEGACAVE'
+    'ultracst' = 'ULTRACST'; 'ultracave' = 'ULTRACST'; 'ultra' = 'ULTRACST'
+    'megacst' = 'MEGACST'; 'megacave' = 'MEGACST'; 'wenyan' = 'MEGACST'; 'wenyan-lite' = 'MEGACST'
+    'wenyan-full' = 'MEGACST'; 'wenyan-ultra' = 'MEGACST'
     'commit' = 'CSTMAN:COMMIT'; 'review' = 'CSTMAN:REVIEW'; 'compress' = 'CSTMAN:COMPRESS'
 }
 if (-not $Badges.ContainsKey($Mode)) { exit 0 }

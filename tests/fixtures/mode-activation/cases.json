@@ -74,7 +74,7 @@
     "prompt": "/cstman ultra",
     "expected": {
       "action": "set",
-      "mode": "ultracave"
+      "mode": "ultracst"
     },
     "issue": 975,
     "reason": "Legacy level alias resolves to its skill mode",

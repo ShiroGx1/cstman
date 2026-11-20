@@ -23,7 +23,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(HERE, '..', '..');
 const INSTALLER = path.join(REPO_ROOT, 'installer', 'install.js');
 
-const SKILLS = ['cstman', 'ultracave', 'megacave', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cavecrew'];
+const SKILLS = ['cstman', 'ultracst', 'megacst', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cstcrew'];
 
 function freshHome() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'cstman-hermes-'));

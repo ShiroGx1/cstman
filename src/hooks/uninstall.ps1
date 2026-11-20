@@ -16,7 +16,7 @@ if ($PSScriptRoot) {
 }
 $env:CSTMAN_SETTINGS_HELPER = $SettingsHelper
 
-$HookFiles = @("package.json", "cstman-config.js", "cstman-parse.js", "cstman-activate.js", "cstman-mode-tracker.js", "cstman-stats.js", "cstman-statusline.sh", "cstman-statusline.ps1", "cavecrew-model-overrides.js")
+$HookFiles = @("package.json", "cstman-config.js", "cstman-parse.js", "cstman-activate.js", "cstman-mode-tracker.js", "cstman-stats.js", "cstman-statusline.sh", "cstman-statusline.ps1", "cstcrew-model-overrides.js")
 
 # Detect if cstman is installed as a plugin
 $PluginInstalled = $false

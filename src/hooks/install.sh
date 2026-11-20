@@ -37,7 +37,7 @@ HOOKS_DIR="$CLAUDE_DIR/hooks"
 SETTINGS="$CLAUDE_DIR/settings.json"
 REPO_URL="https://raw.githubusercontent.com/JuliusBrussee/cstman/main/src/hooks"
 
-HOOK_FILES=("package.json" "cstman-config.js" "cstman-parse.js" "cstman-activate.js" "cstman-mode-tracker.js" "cstman-stats.js" "cstman-statusline.sh" "cavecrew-model-overrides.js")
+HOOK_FILES=("package.json" "cstman-config.js" "cstman-parse.js" "cstman-activate.js" "cstman-mode-tracker.js" "cstman-stats.js" "cstman-statusline.sh" "cstcrew-model-overrides.js")
 
 # Resolve source — works from repo clone or curl pipe
 SCRIPT_DIR=""
@@ -281,6 +281,6 @@ echo "What's installed:"
 echo "  - SessionStart hook: auto-loads cstman rules every session"
 echo "  - SubagentStart hook: subagents inherit the session's active mode"
 echo "  - Mode tracker hook: updates statusline badge when you switch modes"
-echo "    (/cstman, /ultracave, /megacave, /cstman-commit, etc.)"
+echo "    (/cstman, /ultracst, /megacst, /cstman-commit, etc.)"
 echo "  - SessionEnd hook: records lifetime stats silently"
-echo "  - Statusline badge: shows [CSTMAN], [ULTRACAVE] or [MEGACAVE]"
+echo "  - Statusline badge: shows [CSTMAN], [ULTRACST] or [MEGACST]"

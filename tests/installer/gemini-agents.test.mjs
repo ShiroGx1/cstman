@@ -1,6 +1,6 @@
 // Regression for #373: Gemini CLI validates agent frontmatter tool names.
 //
-// The extension loader reads repo-root agents/cavecrew-*.md directly, so
+// The extension loader reads repo-root agents/cstcrew-*.md directly, so
 // Claude Code tool ids like Read/Edit/Bash make Gemini reject the whole agent.
 
 import test from 'node:test';
@@ -21,9 +21,9 @@ const GEMINI_BUILTIN_TOOLS = new Set([
   'run_shell_command',
 ]);
 
-function cavecrewAgentFiles() {
+function cstcrewAgentFiles() {
   return fs.readdirSync(AGENTS_DIR)
-    .filter((name) => /^cavecrew-.*\.md$/.test(name))
+    .filter((name) => /^cstcrew-.*\.md$/.test(name))
     .map((name) => path.join(AGENTS_DIR, name))
     .sort();
 }
@@ -63,9 +63,9 @@ function parseTools(fm) {
   return null;
 }
 
-test('#373 root cavecrew agents omit tools or use Gemini CLI tool ids', () => {
-  const files = cavecrewAgentFiles();
-  assert.equal(files.length, 3, 'expected exactly the three cavecrew root agents');
+test('#373 root cstcrew agents omit tools or use Gemini CLI tool ids', () => {
+  const files = cstcrewAgentFiles();
+  assert.equal(files.length, 3, 'expected exactly the three cstcrew root agents');
 
   for (const file of files) {
     const tools = parseTools(frontmatter(file));

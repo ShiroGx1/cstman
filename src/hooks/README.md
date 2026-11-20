@@ -33,7 +33,7 @@ literal `off` in a session file (the new, durable one).
 
 - Runs on every SessionStart — `source` is `startup`, `resume`, `clear`, `compact` or `fork`
 - Resolves this session's mode and persists it via the symlink-safe `safeWriteFlag` helper
-- Emits the active mode's skill (`skills/cstman`, `skills/ultracave` or `skills/megacave`) as hidden SessionStart context
+- Emits the active mode's skill (`skills/cstman`, `skills/ultracst` or `skills/megacst`) as hidden SessionStart context
 - Sweeps session files older than 14 days (`CSTMAN_SESSION_TTL_MS` overrides), on new sessions only
 - Detects missing statusline config and emits setup nudge (Claude will offer to help)
 
@@ -58,21 +58,21 @@ environment to opt a headless run back in.
 - SessionStart context reaches only the main conversation, so subagents never saw cstman. This hook hands each new subagent **this session's** active skill
 - Injects nothing once the session has stored `off`, so "stop cstman" never leaks into subagents, even if another window turns cstman on
 - A session with no stored mode at all (its SessionStart hook never ran or failed) falls back to the shared mirror, the same as the per-turn reminder its main conversation gets
-- Skips the cavecrew agents (they already talk ultracave), one-shot modes (`commit`/`review`/`compress`), and projects whose repo config says `defaultMode: "off"`
+- Skips the cstcrew agents (they already talk ultracst), one-shot modes (`commit`/`review`/`compress`), and projects whose repo config says `defaultMode: "off"`
 - Read-only: it never writes mode state, logs, or marker files
 
 ### `cstman-mode-tracker.js` — UserPromptSubmit hook
 
-- Fires on every user prompt, checks for `/cstman`, `/ultracave`, `/megacave` commands and natural-language activation/deactivation phrases ("talk like cstman", "stop cstman", "normal mode")
+- Fires on every user prompt, checks for `/cstman`, `/ultracst`, `/megacst` commands and natural-language activation/deactivation phrases ("talk like cstman", "stop cstman", "normal mode")
 - Writes the active mode for **this session** when a cstman command is detected; on deactivation it stores a durable `off` and clears the legacy mirror
-- Emits a small per-turn reinforcement reminder when the session's mode is a prose one (`cstman`/`ultracave`/`megacave`), built from that skill's first line
+- Emits a small per-turn reinforcement reminder when the session's mode is a prose one (`cstman`/`ultracst`/`megacst`), built from that skill's first line
 - Remembers the displaced prose mode per session, so two windows each running `/cstman-commit` return to their own mode
-- Stores: `cstman`, `ultracave`, `megacave`, `commit`, `review`, `compress`, `off`. Older level names still read correctly: `lite`/`full` → `cstman`, `ultra` → `ultracave`, `wenyan*` → `megacave`
+- Stores: `cstman`, `ultracst`, `megacst`, `commit`, `review`, `compress`, `off`. Older level names still read correctly: `lite`/`full` → `cstman`, `ultra` → `ultracst`, `wenyan*` → `megacst`
 
 ### `cstman-statusline.sh` / `cstman-statusline.ps1` — Statusline badge script
 
 - Reads the session JSON Claude Code sends on stdin, takes `session_id`, and renders **that window's** mode; falls back to the legacy mirror when there is no usable id
-- Shows `[CSTMAN]`, `[ULTRACAVE]`, `[MEGACAVE]`, `[CSTMAN:COMMIT]`, etc. A deactivated session renders nothing at all — never `[CSTMAN:OFF]`
+- Shows `[CSTMAN]`, `[ULTRACST]`, `[MEGACST]`, `[CSTMAN:COMMIT]`, etc. A deactivated session renders nothing at all — never `[CSTMAN:OFF]`
 - Never blocks: an interactive terminal is not read from, and the stdin read has a 1s ceiling (integer, because macOS ships bash 3.2 and it rejects fractional `read -t`)
 - Shows mode only. The old `⛏` savings suffix is gone: `.cstman-statusline-suffix` is ignored, because a transcript cannot show what cstman saved
 
@@ -142,8 +142,8 @@ if [ -f "$cstman_flag" ]; then
   cstman_mode=$(cat "$cstman_flag" 2>/dev/null)
   case "$cstman_mode" in
     cstman|lite|full) cstman_badge="CSTMAN" ;;
-    ultracave|ultra) cstman_badge="ULTRACAVE" ;;
-    megacave|wenyan*) cstman_badge="MEGACAVE" ;;
+    ultracst|ultra) cstman_badge="ULTRACST" ;;
+    megacst|wenyan*) cstman_badge="MEGACST" ;;
     commit|review|compress) cstman_badge="CSTMAN:$(echo "$cstman_mode" | tr '[:lower:]' '[:upper:]')" ;;
     *) cstman_badge="" ;;                # off or unknown — render nothing
   esac
@@ -153,13 +153,13 @@ fi
 
 The older one-file version of this snippet reads the legacy mirror, so it shows
 whichever window wrote last and renders the new ids as `[CSTMAN:CSTMAN]` or
-`[CSTMAN:ULTRACAVE]`; re-run the installer to pick up the badge map above. It
+`[CSTMAN:ULTRACST]`; re-run the installer to pick up the badge map above. It
 never sees a literal `off` because the legacy mirror is deleted on deactivation.
 
 Badge examples:
 - `/cstman` → `[CSTMAN]`
-- `/ultracave` → `[ULTRACAVE]`
-- `/megacave` → `[MEGACAVE]`
+- `/ultracst` → `[ULTRACST]`
+- `/megacst` → `[MEGACST]`
 - `/cstman-commit` → `[CSTMAN:COMMIT]`
 - `/cstman-review` → `[CSTMAN:REVIEW]`
 
@@ -174,7 +174,7 @@ SessionStart hook ──┐                                        ┌── Use
                           mirrors       reads
                              ▼             ▼
               .cstman-active      Statusline script  ◀── session JSON on stdin
-           (last-write-wins,        [CSTMAN] / [ULTRACAVE] / [MEGACAVE]
+           (last-write-wins,        [CSTMAN] / [ULTRACST] / [MEGACST]
             compat only)
 
 SessionEnd hook ──(session_id, transcript_path)──▶ cstman-stats.js --record
@@ -202,7 +202,7 @@ node installer/install.js --uninstall
 ```
 
 Or manually:
-1. Remove the cstman hook files from `$CLAUDE_CONFIG_DIR/hooks/` (default `~/.claude/hooks/`): `cstman-activate.js`, `cstman-mode-tracker.js`, `cstman-parse.js`, `cstman-stats.js`, `cstman-config.js`, `cavecrew-model-overrides.js`, and `cstman-statusline.{sh,ps1}`.
+1. Remove the cstman hook files from `$CLAUDE_CONFIG_DIR/hooks/` (default `~/.claude/hooks/`): `cstman-activate.js`, `cstman-mode-tracker.js`, `cstman-parse.js`, `cstman-stats.js`, `cstman-config.js`, `cstcrew-model-overrides.js`, and `cstman-statusline.{sh,ps1}`.
 2. Remove the SessionStart, SubagentStart, UserPromptSubmit, SessionEnd, and statusLine entries from `$CLAUDE_CONFIG_DIR/settings.json`.
 3. Delete the mode state from `$CLAUDE_CONFIG_DIR`: the `.cstman-sessions/` directory, `.cstman-active`, `.cstman-active.prev`, `.cstman-mode-log.jsonl`, `.cstman-statusline-suffix`, and `.cstman-nudge-shown`.
 

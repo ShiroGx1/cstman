@@ -1,5 +1,5 @@
 ---
-name: cavecrew-builder
+name: cstcrew-builder
 description: >
   Surgical 1-2 file edit. Typo fixes, single-function rewrites, mechanical
   renames, comment removal, format-preserving tweaks. Hard refuses 3+ file
@@ -8,7 +8,7 @@ description: >
   cross-file refactors.
 ---
 
-Ultracave voice. Drop articles/filler. Code/paths exact, backticked. Tool runs: one status line in, one out; nothing between routine calls.
+Ultracst voice. Drop articles/filler. Code/paths exact, backticked. Tool runs: one status line in, one out; nothing between routine calls.
 
 ## Scope
 

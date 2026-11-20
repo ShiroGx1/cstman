@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-// cavecrew model overrides — patch installed agent frontmatter from env vars.
+// cstcrew model overrides — patch installed agent frontmatter from env vars.
 //
 // Called by cstman-activate.js early in SessionStart so users can pin
 // per-agent models without shadow-copying entire agent files.
 //
 // Env vars:
-//   CAVECREW_REVIEWER_MODEL    → agents/cavecrew-reviewer.md
-//   CAVECREW_BUILDER_MODEL     → agents/cavecrew-builder.md
-//   CAVECREW_INVESTIGATOR_MODEL → agents/cavecrew-investigator.md
+//   CAVECREW_REVIEWER_MODEL    → agents/cstcrew-reviewer.md
+//   CAVECREW_BUILDER_MODEL     → agents/cstcrew-builder.md
+//   CAVECREW_INVESTIGATOR_MODEL → agents/cstcrew-investigator.md
 //
 // Rules:
 //   - Unset / blank → no-op.
@@ -21,9 +21,9 @@ const fs = require('fs');
 const path = require('path');
 
 const AGENT_ENV_MAP = [
-  { envVar: 'CAVECREW_REVIEWER_MODEL',     file: path.join('agents', 'cavecrew-reviewer.md') },
-  { envVar: 'CAVECREW_BUILDER_MODEL',      file: path.join('agents', 'cavecrew-builder.md') },
-  { envVar: 'CAVECREW_INVESTIGATOR_MODEL', file: path.join('agents', 'cavecrew-investigator.md') },
+  { envVar: 'CAVECREW_REVIEWER_MODEL',     file: path.join('agents', 'cstcrew-reviewer.md') },
+  { envVar: 'CAVECREW_BUILDER_MODEL',      file: path.join('agents', 'cstcrew-builder.md') },
+  { envVar: 'CAVECREW_INVESTIGATOR_MODEL', file: path.join('agents', 'cstcrew-investigator.md') },
 ];
 
 // Return the plugin root directory given the hooks directory path.

@@ -7,7 +7,7 @@ plugins. Each has different permissions and failure behavior.
 
 `skills/cstman` asks an agent to communicate with less filler while preserving
 technical terms, code, error text, and necessary ordering. Three skills ship:
-`cstman` (the voice), `ultracave` (grammar stripped), `megacave` (classical Chinese). Auto-clarity relaxes
+`cstman` (the voice), `ultracst` (grammar stripped), `megacst` (classical Chinese). Auto-clarity relaxes
 compression when terse phrasing could make security warnings or irreversible
 steps hard to understand.
 
@@ -44,7 +44,7 @@ headings, code blocks, URLs, paths, and list structure. Those checks do not prov
 semantic equivalence. Review diff before replacing high-stakes instructions.
 
 See [Exploration and delegation](exploration-and-delegation.md) for explorer and
-Cavecrew boundaries.
+CST Crew boundaries.
 
 ## Hooks
 

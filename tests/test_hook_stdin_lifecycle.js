@@ -118,11 +118,11 @@ console.log('hook stdin lifecycle — must not wait on a lagging pipe close\n');
 
   await test('tracker: a mode change is persisted before the hook exits', async (dir) => {
     fs.writeFileSync(path.join(dir, '.cstman-active'), 'cstman');
-    const payload = JSON.stringify({ prompt: '/ultracave', cwd: process.cwd() });
+    const payload = JSON.stringify({ prompt: '/ultracst', cwd: process.cwd() });
     const r = await runHoldingPipeOpen(TRACKER, payload, dir);
     assert.strictEqual(r.code, 0);
     assert.strictEqual(
-      fs.readFileSync(path.join(dir, '.cstman-active'), 'utf8'), 'ultracave',
+      fs.readFileSync(path.join(dir, '.cstman-active'), 'utf8'), 'ultracst',
       'the flag write must land even though stdin never closed',
     );
   });

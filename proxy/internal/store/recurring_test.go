@@ -89,7 +89,7 @@ func TestInjectedContextPayload(t *testing.T) {
 	}{
 		{"system-reminder envelope", "<system-reminder>\nmemory\n</system-reminder>", true},
 		{"claude md preamble", "Codebase and user instructions are shown below. Be sure to adhere to these instructions.", true},
-		{"cstman banner", "CSTMAN MODE ACTIVE — mode: ultracave. Behavior defined by /cstman-ultracave skill.", true},
+		{"cstman banner", "CSTMAN MODE ACTIVE — mode: ultracst. Behavior defined by /cstman-ultracst skill.", true},
 		{"cstman sentinel", "Respond terse like smart cstman. All technical substance stay. Only fluff die.", true},
 		{"session start hook result", "SessionStart:startup hook success: rules", true},
 		{"pre tool use hook result", "PreToolUse:Bash hook failed: boom", true},

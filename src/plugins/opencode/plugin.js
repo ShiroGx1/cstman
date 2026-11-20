@@ -323,7 +323,7 @@ export const CSTMANPlugin = async (ctx) => {
   event: async ({ event } = {}) => {
     // A subagent is a session too (opencode 2: data.parentID, 1.x:
     // properties.info.parentID). Resetting the flag for one would undo the
-    // user's "stop cstman" or /ultracave every time the model delegates.
+    // user's "stop cstman" or /ultracst every time the model delegates.
     const parentID = event?.data?.parentID ?? event?.properties?.info?.parentID;
     if (event && event.type === 'session.created' && !parentID) handleSessionCreated(projectDir);
   },

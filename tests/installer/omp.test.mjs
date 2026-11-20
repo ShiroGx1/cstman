@@ -57,9 +57,9 @@ if (args[1] === 'uninstall') {
 const OMP_SHIM_BODY = process.platform === 'win32'
   ? `@echo off\r\nendLocal & "%_prog%" "%dp0%\\${OMP_SHIM_SCRIPT_NAME}" %*\r\n`
   : `#!/bin/sh\nexec ${JSON.stringify(process.execPath)} "$(dirname "$0")/${OMP_SHIM_SCRIPT_NAME}" "$@"\n`;
-const OMP_SKILLS = ['cstman', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cavecrew'];
+const OMP_SKILLS = ['cstman', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cstcrew'];
 const OMP_COMMANDS = ['cstman.md', 'cstman-commit.md', 'cstman-review.md', 'cstman-compress.md', 'cstman-stats.md', 'cstman-help.md'];
-const OMP_AGENTS = ['cavecrew-investigator.md', 'cavecrew-builder.md', 'cavecrew-reviewer.md'];
+const OMP_AGENTS = ['cstcrew-investigator.md', 'cstcrew-builder.md', 'cstcrew-reviewer.md'];
 const EXISTING_MARKER = 'existing package must survive failed install';
 
 function freshHome() {

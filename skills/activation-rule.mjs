@@ -9,7 +9,7 @@
 
 const SENTINEL = "Respond terse like smart CSTMAN";
 
-const TAIL = `Switch: /cstman (default), /ultracave (fragments, each fact once), /megacave (Classical Chinese 文言文)
+const TAIL = `Switch: /cstman (default), /ultracst (fragments, each fact once), /megacst (Classical Chinese 文言文)
 Stop: "stop cstman" or "normal mode"
 
 Auto-Clarity: plain prose for security warnings, irreversible actions, step order a fragment could scramble, user confused, questions you ask the user. Resume after.

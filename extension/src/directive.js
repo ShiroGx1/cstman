@@ -12,10 +12,13 @@
 })(typeof self !== "undefined" ? self : globalThis, function () {
   "use strict";
 
-  // One mode per skill: skills/cstman, skills/ultracave, skills/megacave.
-  const MODES = ["cstman", "ultracave", "megacave"];
+  // One mode per skill: skills/cstman, skills/ultracst, skills/megacst.
+  const MODES = ["cstman", "ultracst", "megacst"];
   // Values saved by the old lite/full/ultra popup keep working.
-  const LEGACY = { lite: "cstman", full: "cstman", ultra: "ultracave" };
+  const LEGACY = {
+    lite: "cstman", full: "cstman", ultra: "ultracst",
+    ultracave: "ultracst", megacave: "megacst",
+  };
 
   // The cstman skill, compacted to a single conversation-level primer.
   const BASE =
@@ -35,13 +38,13 @@
   // Each clause opens with its skill's thesis line (directive.test.mjs checks).
   const MODE_CLAUSE = {
     cstman:
-      "Mode CSTMAN: Respond terse like smart cstman. All technical substance stay. Only fluff die. " +
+      "Mode CSTMAN: Respond terse like smart CSTMAN. All technical substance stay. Only fluff die. " +
       "Drop articles only where the sentence still reads in one pass; one idea per sentence, 20 words max.]",
-    ultracave:
-      "Mode ULTRACAVE: Respond terse like smart cstman. All technical substance stay. Only fluff die. Then cut again. " +
+    ultracst:
+      "Mode ULTRACST: Respond terse like smart cstman. All technical substance stay. Only fluff die. Then cut again. " +
       "Fragments, one word when one word is enough, each fact once; cut conjunctions only when order survives.]",
-    megacave:
-      "Mode MEGACAVE: 以文言答。技術之實皆存，唯贅言去之。 " +
+    megacst:
+      "Mode MEGACST: 以文言答。技術之實皆存，唯贅言去之。 " +
       "Answer in Classical Chinese (文言文) whatever my language: verb before object, particles instead of connective " +
       "phrases; code, commands, paths, API names and errors stay in their original script; a clause ambiguous in 文言 becomes 白話.]",
   };
@@ -52,12 +55,12 @@
   }
 
   // buildPrimer: the full directive, sent on the first message of a conversation.
-  // megacave answers in Classical Chinese whatever the user's language, so the
+  // megacst answers in Classical Chinese whatever the user's language, so the
   // keep-my-language clause is left out for it.
   const LANGUAGE_CLAUSE = "Compress the style, not my language. ";
   function buildPrimer(mode) {
     const m = normMode(mode);
-    return BASE + (m === "megacave" ? "" : LANGUAGE_CLAUSE) + MODE_CLAUSE[m];
+    return BASE + (m === "megacst" ? "" : LANGUAGE_CLAUSE) + MODE_CLAUSE[m];
   }
 
   // buildReminder: the short "stay cstman" nudge, sent on later messages.

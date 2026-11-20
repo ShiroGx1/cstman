@@ -24,7 +24,7 @@ Works in any Chromium browser (Chrome, Edge, Brave, Arc). No build step.
 
 ## Use
 
-- Turn it on from the popup (and pick a mode: **cstman / ultracave / megacave**).
+- Turn it on from the popup (and pick a mode: **cstman / ultracst / megacst**).
 - Type and send as normal. The extension prepends the cstman directive and
   submits — the AI's replies come back terse.
 - The on-page flame pill shows it's active; click it to turn off (or say

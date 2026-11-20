@@ -1,5 +1,5 @@
 // `--only cursor`: after `npx skills add -a cursor`, the installer owns the
-// cavecrew subagents in ~/.cursor/agents/, the shared sessionStart hook payload
+// cstcrew subagents in ~/.cursor/agents/, the shared sessionStart hook payload
 // in ~/.cursor/cstman/, and one sessionStart entry in ~/.cursor/hooks.json.
 // A recording npx stub keeps the network out; HOME is a temp dir.
 
@@ -17,7 +17,7 @@ import { isolatedEnv } from './_isolated-env.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const INSTALLER = path.join(ROOT, 'installer/install.js');
 const cursor = createRequire(import.meta.url)(path.join(ROOT, 'installer/lib/cursor-native.js'));
-const AGENTS = ['cavecrew-builder.md', 'cavecrew-investigator.md', 'cavecrew-reviewer.md'];
+const AGENTS = ['cstcrew-builder.md', 'cstcrew-investigator.md', 'cstcrew-reviewer.md'];
 const FOREIGN = { command: './hooks/user.sh' };
 
 function fixture(t) {
@@ -61,9 +61,9 @@ test('install lands agents, hook payload and one sessionStart entry; rerun and u
   for (const name of AGENTS) {
     const fm = frontmatter(fs.readFileSync(path.join(root, 'agents', name), 'utf8'));
     assert.doesNotMatch(fm, /^model:/m);
-    assert.equal(/^readonly: true$/m.test(fm), name !== 'cavecrew-builder.md', name);
+    assert.equal(/^readonly: true$/m.test(fm), name !== 'cstcrew-builder.md', name);
   }
-  for (const rel of ['hooks/cstman-config.js', 'hooks/package.json', 'skills/cstman/SKILL.md', 'skills/ultracave/SKILL.md', 'skills/megacave/SKILL.md']) {
+  for (const rel of ['hooks/cstman-config.js', 'hooks/package.json', 'skills/cstman/SKILL.md', 'skills/ultracst/SKILL.md', 'skills/megacst/SKILL.md']) {
     assert.ok(fs.existsSync(path.join(root, 'cstman', rel)), rel);
   }
   const entries = hooksJson().hooks.sessionStart;
@@ -97,7 +97,7 @@ test('--no-hooks installs the agents only', (t) => {
   const { root, run } = fixture(t);
   const r = run('--only', 'cursor', '--no-hooks');
   assert.equal(r.status, 0, r.stdout + r.stderr);
-  assert.ok(fs.existsSync(path.join(root, 'agents', 'cavecrew-builder.md')));
+  assert.ok(fs.existsSync(path.join(root, 'agents', 'cstcrew-builder.md')));
   assert.equal(fs.existsSync(path.join(root, 'hooks.json')), false);
   assert.equal(fs.existsSync(path.join(root, 'cstman')), false);
 });
@@ -113,7 +113,7 @@ test('a malformed hooks.json is reported and left byte-identical', (t) => {
 
 test('a user-owned agent file is never overwritten', (t) => {
   const { root, run } = fixture(t);
-  const mine = path.join(root, 'agents', 'cavecrew-builder.md');
+  const mine = path.join(root, 'agents', 'cstcrew-builder.md');
   fs.mkdirSync(path.dirname(mine), { recursive: true });
   fs.writeFileSync(mine, 'mine\n');
   const r = run('--only', 'cursor');

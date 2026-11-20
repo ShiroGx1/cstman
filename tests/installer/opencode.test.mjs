@@ -69,15 +69,15 @@ test('opencode fresh install drops plugin, commands, agents, skills, AGENTS.md, 
     assert.ok(fs.existsSync(path.join(ocDir, 'plugins', 'cstman', 'cstman-config.cjs')), 'cstman-config.cjs sibling missing');
     assert.ok(fs.existsSync(path.join(ocDir, 'plugins', 'cstman', 'cstman-parse.cjs')), 'cstman-parse.cjs sibling missing');
 
-    for (const f of ['cstman.md', 'ultracave.md', 'megacave.md', 'cstman-commit.md', 'cstman-review.md', 'cstman-compress.md', 'cstman-stats.md', 'cstman-help.md']) {
+    for (const f of ['cstman.md', 'ultracst.md', 'megacst.md', 'cstman-commit.md', 'cstman-review.md', 'cstman-compress.md', 'cstman-stats.md', 'cstman-help.md']) {
       assert.ok(fs.existsSync(path.join(ocDir, 'commands', f)), `command ${f} missing`);
     }
-    for (const f of ['cavecrew-investigator.md', 'cavecrew-builder.md', 'cavecrew-reviewer.md']) {
+    for (const f of ['cstcrew-investigator.md', 'cstcrew-builder.md', 'cstcrew-reviewer.md']) {
       assert.ok(fs.existsSync(path.join(ocDir, 'agents', f)), `agent ${f} missing`);
-      // Subagent-only: keeps cavecrew out of opencode's Tab cycle (#725).
+      // Subagent-only: keeps cstcrew out of opencode's Tab cycle (#725).
       assert.match(fs.readFileSync(path.join(ocDir, 'agents', f), 'utf8'), /^mode: subagent$/m, `agent ${f} must be mode: subagent`);
     }
-    for (const name of ['cstman', 'ultracave', 'megacave', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cavecrew']) {
+    for (const name of ['cstman', 'ultracst', 'megacst', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cstcrew']) {
       assert.ok(fs.existsSync(path.join(ocDir, 'skills', name, 'SKILL.md')), `skill ${name}/SKILL.md missing`);
     }
     assert.ok(fs.existsSync(path.join(ocDir, 'AGENTS.md')), 'AGENTS.md missing');
@@ -350,7 +350,7 @@ test('opencode uninstall removes plugin dir, command/agent/skill files, prunes o
     const ocDir = path.join(xdg, 'opencode');
     assert.equal(fs.existsSync(path.join(ocDir, 'plugins', 'cstman')), false, 'plugin dir survived');
     assert.equal(fs.existsSync(path.join(ocDir, 'commands', 'cstman.md')), false, 'cstman.md command survived');
-    assert.equal(fs.existsSync(path.join(ocDir, 'agents', 'cavecrew-builder.md')), false, 'cavecrew agent survived');
+    assert.equal(fs.existsSync(path.join(ocDir, 'agents', 'cstcrew-builder.md')), false, 'cstcrew agent survived');
     assert.equal(fs.existsSync(path.join(ocDir, 'skills', 'cstman')), false, 'cstman skill dir survived');
     assert.equal(fs.existsSync(path.join(ocDir, 'AGENTS.md')), false, 'AGENTS.md (we wrote it) survived');
 
@@ -373,7 +373,7 @@ test('opencode uninstall removes plugin dir, command/agent/skill files, prunes o
 // parsing, `experimental.chat.system.transform` for reinforcement, and the
 // `event` dispatcher (filtering event.type === 'session.created') for session
 // init. This test drives those real hooks.
-test('opencode plugin handles /cstman ultra, /megacave, stop cstman, and session init via real hooks', async () => {
+test('opencode plugin handles /cstman ultra, /megacst, stop cstman, and session init via real hooks', async () => {
   const xdg = freshTmpDir();
   const shimDir = shimOpencode();
   const origDefault = process.env.CSTMAN_DEFAULT_MODE;
@@ -404,13 +404,13 @@ test('opencode plugin handles /cstman ultra, /megacave, stop cstman, and session
     assert.equal(typeof handlers['experimental.chat.system.transform'], 'function',
       'system.transform should be a function');
 
-    // Slash command in a chat.message text part activates ultracave (the
+    // Slash command in a chat.message text part activates ultracst (the
     // legacy `ultra` argument is an alias).
     await handlers['chat.message']({}, { parts: [{ type: 'text', text: '/cstman ultra' }] });
-    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracave');
+    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracst');
     assert.ok(fs.existsSync(modeLogPath), 'mode log missing after slash activation');
     const activationRows = fs.readFileSync(modeLogPath, 'utf8').trim().split('\n').map(JSON.parse);
-    assert.equal(activationRows.at(-1).mode, 'ultracave');
+    assert.equal(activationRows.at(-1).mode, 'ultracst');
 
     // Status must replace the activation template and report the actual flag,
     // without touching mode history or refreshing its mtime.
@@ -419,8 +419,8 @@ test('opencode plugin handles /cstman ultra, /megacave, stop cstman, and session
       'Activate cstman mode: status\n\nIf no argument given, use cstman.']) {
       const output = { parts: [{ type: 'text', text }] };
       await handlers['chat.message']({}, output);
-      assert.equal(output.parts[0].text, 'Report this status verbatim without changing mode: CSTMAN mode: ultracave');
-      assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracave');
+      assert.equal(output.parts[0].text, 'Report this status verbatim without changing mode: CSTMAN mode: ultracst');
+      assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracst');
       assert.deepEqual([fs.readFileSync(modeLogPath, 'utf8'), fs.statSync(flagPath).mtimeMs], beforeStatus);
     }
 
@@ -428,15 +428,15 @@ test('opencode plugin handles /cstman ultra, /megacave, stop cstman, and session
     // chat.message fires — the argument must be recovered from the expanded text.
     await handlers['chat.message']({}, { parts: [{ type: 'text', text:
       'Activate cstman mode: wenyan-lite\n\nIf no argument given, use cstman. If "off", deactivate.' }] });
-    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'megacave');
+    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'megacst');
     await handlers['chat.message']({}, { parts: [{ type: 'text', text:
       'Activate cstman mode: off\n\nIf no argument given, use cstman. If "off", deactivate.' }] });
     assert.equal(fs.existsSync(flagPath), false, 'expanded template with off should delete the flag');
     await handlers['chat.message']({}, { parts: [{ type: 'text', text:
       'Activate cstman mode: \n\nIf no argument given, use cstman. If "off", deactivate.' }] });
     assert.equal(fs.readFileSync(flagPath, 'utf8'), 'cstman', 'expanded template without argument uses default');
-    // /ultracave and /megacave expand to their own command templates.
-    for (const [file, mode] of [['ultracave.md', 'ultracave'], ['megacave.md', 'megacave']]) {
+    // /ultracst and /megacst expand to their own command templates.
+    for (const [file, mode] of [['ultracst.md', 'ultracst'], ['megacst.md', 'megacst']]) {
       const tpl = fs.readFileSync(path.join(REPO_ROOT, 'src', 'plugins', 'opencode', 'commands', file), 'utf8')
         .replace(/^---[\s\S]*?---\s*/, '');
       await handlers['chat.message']({}, { parts: [{ type: 'text', text: tpl }] });
@@ -447,14 +447,14 @@ test('opencode plugin handles /cstman ultra, /megacave, stop cstman, and session
     // quotes ("/cstman lite"\n) — the parser must unwrap them.
     await handlers['chat.message']({}, { parts: [{ type: 'text', text: '"/cstman lite"\n' }] });
     assert.equal(fs.readFileSync(flagPath, 'utf8'), 'cstman');
-    await handlers['chat.message']({}, { parts: [{ type: 'text', text: '/ultracave' }] });
-    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracave');
+    await handlers['chat.message']({}, { parts: [{ type: 'text', text: '/ultracst' }] });
+    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracst');
 
     // system.transform injects the reinforcement line while active.
     const sys1 = { system: [] };
     await handlers['experimental.chat.system.transform']({}, sys1);
     assert.equal(sys1.system.length, 1, 'expected one reinforcement line');
-    assert.match(sys1.system[0], /CSTMAN MODE ACTIVE \(ultracave\)/);
+    assert.match(sys1.system[0], /CSTMAN MODE ACTIVE \(ultracst\)/);
 
     // Existing system prompts must remain a single entry. Some vLLM chat
     // templates reject a second system message even when both precede user
@@ -462,7 +462,7 @@ test('opencode plugin handles /cstman ultra, /megacave, stop cstman, and session
     const sysWithExisting = { system: ['existing system prompt'] };
     await handlers['experimental.chat.system.transform']({}, sysWithExisting);
     assert.equal(sysWithExisting.system.length, 1, 'must not add a second system message');
-    assert.match(sysWithExisting.system[0], /^existing system prompt\n\nCSTMAN MODE ACTIVE \(ultracave\)/);
+    assert.match(sysWithExisting.system[0], /^existing system prompt\n\nCSTMAN MODE ACTIVE \(ultracst\)/);
 
     // Idempotent across repeated transforms on the SAME array: if opencode
     // ever reuses output.system between turns, an unguarded append would grow
@@ -585,18 +585,18 @@ test('opencode 2.x loads server.js: session init, prompt mode changes and contex
       const event = { sessionID: 'ses_1', prompt: { text } };
       return hooks.prompt(event).then(() => event.prompt.text);
     };
-    await prompt('/ultracave');
-    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracave');
-    assert.equal(await prompt('/cstman status'), 'Report this status verbatim without changing mode: CSTMAN mode: ultracave');
+    await prompt('/ultracst');
+    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracst');
+    assert.equal(await prompt('/cstman status'), 'Report this status verbatim without changing mode: CSTMAN mode: ultracst');
     // A subagent's prompt is written by the model; it must not switch the mode.
     await hooks.prompt({ sessionID: 'ses_child', prompt: { text: 'stop cstman' } });
-    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracave', 'a subagent prompt changed the mode');
+    assert.equal(fs.readFileSync(flagPath, 'utf8'), 'ultracst', 'a subagent prompt changed the mode');
 
     const context = { sessionID: 'ses_1', system: [{ type: 'text', text: 'host prompt' }] };
     await hooks.context(context);
     assert.equal(context.system.length, 2);
     assert.equal(context.system[1].type, 'text');
-    assert.match(context.system[1].text, /^CSTMAN MODE ACTIVE \(ultracave\)/);
+    assert.match(context.system[1].text, /^CSTMAN MODE ACTIVE \(ultracst\)/);
 
     await prompt('stop cstman');
     assert.equal(fs.existsSync(flagPath), false, 'stop cstman did not clear the flag');
@@ -752,22 +752,22 @@ test('opencode system.transform injects the active mode\'s SKILL.md body or thes
 
     // Switching mode mid-session must swap in the NEW mode's rules, not leave
     // cstman's stacked behind it (the idempotent-rewrite path). Whether the
-    // ultracave skill dir is installed or not, its thesis line is present.
-    await handlers['chat.message']({}, { parts: [{ type: 'text', text: '/ultracave' }] });
+    // ultracst skill dir is installed or not, its thesis line is present.
+    await handlers['chat.message']({}, { parts: [{ type: 'text', text: '/ultracst' }] });
     await handlers['experimental.chat.system.transform']({}, sys); // reuse same array, as opencode may
     await handlers['experimental.chat.system.transform']({}, sys);
-    assert.match(sys.system[0], /CSTMAN MODE ACTIVE \(ultracave\)/);
-    assert.match(sys.system[0], /Only fluff die\. Then cut again\./, 'ultracave must carry its own thesis');
+    assert.match(sys.system[0], /CSTMAN MODE ACTIVE \(ultracst\)/);
+    assert.match(sys.system[0], /Only fluff die\. Then cut again\./, 'ultracst must carry its own thesis');
     assert.doesNotMatch(sys.system[0], /CSTMAN is a voice, not broken grammar\./,
-      'switching to ultracave must drop cstman\'s body, not accumulate it');
+      'switching to ultracst must drop cstman\'s body, not accumulate it');
     assert.equal((sys.system[0].match(/CSTMAN MODE ACTIVE/g) || []).length, 1,
       'banner must not duplicate across repeated transforms');
 
-    // The legacy wenyan argument lands on megacave.
+    // The legacy wenyan argument lands on megacst.
     await handlers['chat.message']({}, { parts: [{ type: 'text', text: '/cstman wenyan' }] });
     const sysMega = { system: [] };
     await handlers['experimental.chat.system.transform']({}, sysMega);
-    assert.match(sysMega.system[0], /CSTMAN MODE ACTIVE \(megacave\)/);
+    assert.match(sysMega.system[0], /CSTMAN MODE ACTIVE \(megacst\)/);
     assert.match(sysMega.system[0], /以文言答。技術之實皆存，唯贅言去之。/);
   } finally {
     if (origDefault === undefined) delete process.env.CSTMAN_DEFAULT_MODE;
@@ -861,7 +861,7 @@ test('opencode session init still activates when cstman-config.cjs predates reco
 
     // And a later mode change must still take effect rather than throwing.
     await handlers['chat.message']({}, { parts: [{ type: 'text', text: '/cstman ultra' }] });
-    assert.equal(fs.readFileSync(path.join(xdg, 'opencode', '.cstman-active'), 'utf8').trim(), 'ultracave',
+    assert.equal(fs.readFileSync(path.join(xdg, 'opencode', '.cstman-active'), 'utf8').trim(), 'ultracst',
       'a mode change must still apply with no recordModeChange export');
     assert.ok(!fs.existsSync(path.join(xdg, 'opencode', MODE_LOG_BASENAME)),
       'a stripped config cannot have written a history log');
@@ -946,17 +946,17 @@ test('opencode plugin restores the displaced prose mode after a one-shot mode', 
     };
     const flag = () => (fs.existsSync(flagPath) ? fs.readFileSync(flagPath, 'utf8') : null);
 
-    // A one-shot displaces ultracave and remembers it.
-    await send('/ultracave');
-    assert.equal(flag(), 'ultracave');
+    // A one-shot displaces ultracst and remembers it.
+    await send('/ultracst');
+    assert.equal(flag(), 'ultracst');
     await send('/cstman-commit');
     assert.equal(flag(), 'commit', 'one-shot must take effect for its own turn');
     assert.equal(await reinforced(), false, 'independent modes carry their own skill, not cstman reinforcement');
-    assert.equal(fs.readFileSync(prevPath, 'utf8'), 'ultracave', 'displaced prose mode must be remembered');
+    assert.equal(fs.readFileSync(prevPath, 'utf8'), 'ultracst', 'displaced prose mode must be remembered');
 
     // The next ordinary prompt restores it — this is what regressed.
     await send('now fix the parser bug');
-    assert.equal(flag(), 'ultracave', 'next ordinary prompt must restore the displaced prose mode');
+    assert.equal(flag(), 'ultracst', 'next ordinary prompt must restore the displaced prose mode');
     assert.equal(await reinforced(), true, 'reinforcement must resume after the one-shot');
     assert.equal(fs.existsSync(prevPath), false, 'prev must be cleared once consumed');
 
@@ -965,9 +965,9 @@ test('opencode plugin restores the displaced prose mode after a one-shot mode', 
     await send('/cstman-commit');
     await send('/cstman-review');
     assert.equal(flag(), 'review');
-    assert.equal(fs.readFileSync(prevPath, 'utf8'), 'ultracave', 'chained one-shots keep the first return target');
+    assert.equal(fs.readFileSync(prevPath, 'utf8'), 'ultracst', 'chained one-shots keep the first return target');
     await send('ship it');
-    assert.equal(flag(), 'ultracave', 'chained one-shots restore the original prose mode');
+    assert.equal(flag(), 'ultracst', 'chained one-shots restore the original prose mode');
 
     // A one-shot entered while cstman is OFF must restore off, never a stale
     // return target left behind by an earlier one-shot.
@@ -1007,7 +1007,7 @@ test('opencode uninstall removes both the mode flag and the one-shot prev file',
     const flag = path.join(ocDir, '.cstman-active');
     const prev = path.join(ocDir, '.cstman-active.prev');
     fs.writeFileSync(flag, 'commit');
-    fs.writeFileSync(prev, 'ultracave');
+    fs.writeFileSync(prev, 'ultracst');
 
     const removed = runInstaller(['--uninstall'], env);
     assert.equal(removed.status, 0, removed.stderr);
@@ -1157,8 +1157,8 @@ test('opencode plugin does not deactivate cstman when the config copy predates t
     const send = (text) => handlers['chat.message']({}, { parts: [{ type: 'text', text }] });
     const flag = () => (fs.existsSync(flagPath) ? fs.readFileSync(flagPath, 'utf8') : null);
 
-    await send('/ultracave');
-    assert.equal(flag(), 'ultracave');
+    await send('/ultracst');
+    assert.equal(flag(), 'ultracst');
     await send('/cstman-commit');
     assert.equal(flag(), 'commit');
 
@@ -1316,7 +1316,7 @@ test('OPENCODE_CONFIG_DIR selects the installer root and the copied plugin flag 
     const factory = mod.default || mod.CSTMANPlugin;
     const handlers = await factory({});
     await handlers['chat.message']({}, { parts: [{ type: 'text', text: '/cstman ultra' }] });
-    assert.equal(fs.readFileSync(path.join(selected, '.cstman-active'), 'utf8'), 'ultracave',
+    assert.equal(fs.readFileSync(path.join(selected, '.cstman-active'), 'utf8'), 'ultracst',
       'the plugin must write its flag under the selected root');
     assert.ok(!fs.existsSync(path.join(xdg, 'opencode', '.cstman-active')),
       'the plugin must not write a flag into the unselected XDG root');

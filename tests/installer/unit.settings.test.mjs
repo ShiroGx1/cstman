@@ -196,7 +196,7 @@ test('addCommandHook rewrites our stale hook command in place', () => {
   SETTINGS.addCommandHook(record, 'SessionEnd', { command: '"/new/node" "/h/cstman-stats.js" --record', marker: 'cstman-stats' });
   assert.equal(record.hooks.SessionEnd[0].hooks[0].command, '"/new/node" "/h/cstman-stats.js" --record');
   // A hand-edited command (env prefix, wrapper) stays the user's.
-  const custom = 'CSTMAN_DEFAULT_MODE=ultracave node /h/hooks/cstman-activate.js';
+  const custom = 'CSTMAN_DEFAULT_MODE=ultracst node /h/hooks/cstman-activate.js';
   const s = { hooks: { SessionStart: [{ hooks: [{ type: 'command', command: custom }] }] } };
   assert.equal(SETTINGS.addCommandHook(s, 'SessionStart', opts(fresh)), false);
   assert.equal(s.hooks.SessionStart[0].hooks[0].command, custom);

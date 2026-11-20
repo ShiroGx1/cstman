@@ -496,7 +496,7 @@ class HookScriptTests(unittest.TestCase):
             self.assertIn("### 1. Answer first", result.stdout)
             self.assertIn(body, result.stdout)
             self.assertTrue(result.stdout.startswith("CSTMAN MODE ACTIVE — mode: cstman\n\n# cstman\n"))
-            self.assertIn("Switch: /cstman, /ultracave, /megacave.", result.stdout)
+            self.assertIn("Switch: /cstman, /ultracst, /megacst.", result.stdout)
 
     def test_activate_finds_skill_beside_config_dir_hooks(self):
         # Standalone layout: hooks at $CLAUDE_CONFIG_DIR/hooks/, skill installed
@@ -606,10 +606,10 @@ class SessionStartSourceTests(unittest.TestCase):
     def test_compact_still_re_emits_the_ruleset_when_active(self):
         # Compaction is exactly what prunes the rules out of context, so the
         # hook must keep re-injecting them — it just must not change the mode.
-        self.set_session_mode("sessA", "ultracave")
+        self.set_session_mode("sessA", "ultracst")
         r = self.activate({"session_id": "sessA", "source": "compact"})
-        self.assertIn("CSTMAN MODE ACTIVE — mode: ultracave", r.stdout)
-        self.assertIn("Ultracave is cstman with the grammar stripped.", r.stdout)
+        self.assertIn("CSTMAN MODE ACTIVE — mode: ultracst", r.stdout)
+        self.assertIn("Ultracst is cstman with the grammar stripped.", r.stdout)
 
     def test_compact_does_not_re_derive_the_configured_default(self):
         # A pre-three-skill session file: 'lite' resolves to cstman.
@@ -619,28 +619,28 @@ class SessionStartSourceTests(unittest.TestCase):
             extra_env={"CSTMAN_DEFAULT_MODE": "ultra"},
         )
         self.assertIn("mode: cstman", r.stdout)
-        self.assertNotIn("mode: ultracave", r.stdout)
+        self.assertNotIn("mode: ultracst", r.stdout)
 
-    def test_legacy_wenyan_session_file_resolves_to_megacave(self):
+    def test_legacy_wenyan_session_file_resolves_to_megacst(self):
         self.set_session_mode("sessA", "wenyan-lite")
         r = self.activate({"session_id": "sessA", "source": "compact"})
-        self.assertIn("CSTMAN MODE ACTIVE — mode: megacave", r.stdout)
-        self.assertIn("Megacave is cstman in Classical Chinese.", r.stdout)
+        self.assertIn("CSTMAN MODE ACTIVE — mode: megacst", r.stdout)
+        self.assertIn("Megacst is cstman in Classical Chinese.", r.stdout)
         # Re-persisted under the new id; the mirror follows.
-        self.assertEqual(self.session_mode("sessA"), "megacave")
-        self.assertEqual((self.claude_dir / ".cstman-active").read_text(encoding="utf-8"), "megacave")
+        self.assertEqual(self.session_mode("sessA"), "megacst")
+        self.assertEqual((self.claude_dir / ".cstman-active").read_text(encoding="utf-8"), "megacst")
 
     def test_legacy_env_default_resolves_to_its_skill(self):
         r = self.activate(
             {"session_id": "sessA", "source": "startup"},
             extra_env={"CSTMAN_DEFAULT_MODE": "ultra"},
         )
-        self.assertIn("CSTMAN MODE ACTIVE — mode: ultracave", r.stdout)
-        self.assertEqual(self.session_mode("sessA"), "ultracave")
+        self.assertIn("CSTMAN MODE ACTIVE — mode: ultracst", r.stdout)
+        self.assertEqual(self.session_mode("sessA"), "ultracst")
 
     def test_fallback_ruleset_without_any_skill_file(self):
         # Standalone hooks with no skills dir: thesis + rule headlines, plus the
-        # mode's own thesis for ultracave/megacave.
+        # mode's own thesis for ultracst/megacst.
         with tempfile.TemporaryDirectory(prefix="cstman-noskill-") as tmp:
             hooks = Path(tmp) / "hooks"
             hooks.mkdir()
@@ -648,8 +648,8 @@ class SessionStartSourceTests(unittest.TestCase):
                 shutil.copy(REPO_ROOT / "src" / "hooks" / name, hooks / name)
             self.ACTIVATE = str(hooks / "cstman-activate.js")
             r = self.activate({"session_id": "sessA", "source": "startup"},
-                              extra_env={"CSTMAN_DEFAULT_MODE": "megacave"})
-        self.assertIn("CSTMAN MODE ACTIVE — mode: megacave", r.stdout)
+                              extra_env={"CSTMAN_DEFAULT_MODE": "megacst"})
+        self.assertIn("CSTMAN MODE ACTIVE — mode: megacst", r.stdout)
         self.assertIn("Respond terse like smart cstman.", r.stdout)
         self.assertIn("9. Never perform cstman.", r.stdout)
         self.assertIn("以文言答。技術之實皆存，唯贅言去之。", r.stdout)

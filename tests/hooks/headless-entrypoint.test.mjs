@@ -61,7 +61,7 @@ for (const entrypoint of ['cli', 'claude-vscode', 'claude-desktop']) {
 }
 
 test('explicit CSTMAN_DEFAULT_MODE opts a headless session back in', t => {
-  const { mode, run } = fixture(t, { CLAUDE_CODE_ENTRYPOINT: 'sdk-cli', CSTMAN_DEFAULT_MODE: 'ultracave' });
-  assert.match(run('cstman-activate.js', { source: 'startup' }), /CSTMAN MODE ACTIVE — mode: ultracave/);
-  assert.equal(mode(), 'ultracave');
+  const { mode, run } = fixture(t, { CLAUDE_CODE_ENTRYPOINT: 'sdk-cli', CSTMAN_DEFAULT_MODE: 'ultracst' });
+  assert.match(run('cstman-activate.js', { source: 'startup' }), /CSTMAN MODE ACTIVE — mode: ultracst/);
+  assert.equal(mode(), 'ultracst');
 });

@@ -52,8 +52,8 @@ test("site disable and indicator toggle preserve raw outgoing prompt", async ({ 
   });
   await expect.poll(() => page.evaluate(() => window.cstmanTest.transcript())).toEqual(["site disabled"]);
 
-  await page.evaluate(() => window.cstmanTest.setStorage({ sites: {}, enabled: true, level: "ultracave" }));
-  await expect(page.locator("#cstman-indicator")).toContainText("ultracave");
+  await page.evaluate(() => window.cstmanTest.setStorage({ sites: {}, enabled: true, level: "ultracst" }));
+  await expect(page.locator("#cstman-indicator")).toContainText("ultracst");
   await page.locator("#cstman-indicator").click();
   await expect(page.locator("#cstman-indicator")).toBeHidden();
   await page.evaluate(() => {

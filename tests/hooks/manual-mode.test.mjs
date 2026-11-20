@@ -50,22 +50,22 @@ for (const source of ['env', 'repo', 'user']) {
       assert.match(run('cstman-activate.js', { source }), /CSTMAN MODE ACTIVE/);
       assert.equal(mode(), 'cstman');
     }
-    run('cstman-mode-tracker.js', { prompt: '/ultracave' });
+    run('cstman-mode-tracker.js', { prompt: '/ultracst' });
     run('cstman-mode-tracker.js', { prompt: '/cstman-commit' });
     run('cstman-mode-tracker.js', { prompt: 'continue' });
-    assert.equal(mode(), 'ultracave');
+    assert.equal(mode(), 'ultracst');
     run('cstman-mode-tracker.js', { prompt: 'stop cstman' });
     assert.equal(run('cstman-activate.js', { source: 'compact' }), 'OK');
     assert.equal(mode(), 'off');
     run('cstman-mode-tracker.js', { prompt: 'talk like cstman' });
     assert.equal(mode(), 'cstman');
-    run('cstman-mode-tracker.js', { prompt: '/megacave' });
+    run('cstman-mode-tracker.js', { prompt: '/megacst' });
     run('cstman-mode-tracker.js', { prompt: '/cstman-commit' });
     assert.equal(run('cstman-activate.js', { source: 'clear' }), 'OK');
     assert.equal(mode(), 'off');
     run('cstman-mode-tracker.js', { prompt: '/cstman-review' });
     run('cstman-mode-tracker.js', { prompt: 'continue after reset' });
-    assert.equal(mode(), 'off', 'one-shot after clear must not resurrect stale megacave');
+    assert.equal(mode(), 'off', 'one-shot after clear must not resurrect stale megacst');
   });
 }
 

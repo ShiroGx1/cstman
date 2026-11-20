@@ -1,12 +1,12 @@
 // Subagent frontmatter sanitizer for opencode (issue #386).
 //
 // opencode rejects the YAML array form `tools: [Read, Grep, Bash]` that
-// Claude Code accepts. Copying agents/cavecrew-*.md verbatim into
+// Claude Code accepts. Copying agents/cstcrew-*.md verbatim into
 // ~/.config/opencode/agents/ broke opencode startup with:
-//   Configuration is invalid at .../cavecrew-reviewer.md
+//   Configuration is invalid at .../cstcrew-reviewer.md
 //   ↳ Expected object | undefined, got ["Read","Grep","Bash"] tools
 //
-// Fix: strip the `tools:` field on copy. Source cavecrew agents now omit it too
+// Fix: strip the `tools:` field on copy. Source cstcrew agents now omit it too
 // for Gemini compatibility (#373), while the helper still handles older copied
 // forms, preserving every other frontmatter key and the body.
 
@@ -22,7 +22,7 @@ const REPO_ROOT = path.resolve(HERE, '..', '..');
 const requireCjs = createRequire(import.meta.url);
 const { transformOpencodeAgentFrontmatter } = requireCjs(path.join(REPO_ROOT, 'installer', 'lib', 'opencode-agent.js'));
 
-const SHIPPED_AGENT_FILES = ['cavecrew-investigator.md', 'cavecrew-builder.md', 'cavecrew-reviewer.md'];
+const SHIPPED_AGENT_FILES = ['cstcrew-investigator.md', 'cstcrew-builder.md', 'cstcrew-reviewer.md'];
 
 function frontmatter(content) {
   const m = content.match(/^---\n([\s\S]*?)\n---\n/);
@@ -74,7 +74,7 @@ body
 // ── Folded `description: >` block must NOT be eaten ──────────────────────
 test('preserves folded `description: >` continuation lines when `tools:` follows', () => {
   const src = `---
-name: cavecrew-reviewer
+name: cstcrew-reviewer
 description: >
   Diff/branch/file reviewer. One line per finding, severity-tagged, no praise,
   no scope creep. Output format \`path:line: <emoji> <severity>: <problem>. <fix>.\`
@@ -117,7 +117,7 @@ test('non-string input returns unchanged', () => {
 });
 
 // ── Real shipped agent files: every one must already be tool-list safe ──
-test('all shipped cavecrew agent files omit tool lists at source', () => {
+test('all shipped cstcrew agent files omit tool lists at source', () => {
   for (const f of SHIPPED_AGENT_FILES) {
     const src = fs.readFileSync(path.join(REPO_ROOT, 'agents', f), 'utf8');
     const fm = frontmatter(src);
@@ -125,14 +125,14 @@ test('all shipped cavecrew agent files omit tool lists at source', () => {
   }
 });
 
-test('all shipped cavecrew agent files become opencode-safe after transform (GREEN proof)', () => {
+test('all shipped cstcrew agent files become opencode-safe after transform (GREEN proof)', () => {
   for (const f of SHIPPED_AGENT_FILES) {
     const src = fs.readFileSync(path.join(REPO_ROOT, 'agents', f), 'utf8');
     const out = transformOpencodeAgentFrontmatter(src);
     const fm = frontmatter(out);
 
     assert.doesNotMatch(fm, /^tools:/m, `${f}: tools field still present after transform`);
-    assert.match(fm, /^name: cavecrew-/m, `${f}: name field preserved`);
+    assert.match(fm, /^name: cstcrew-/m, `${f}: name field preserved`);
     assert.match(fm, /^description:/m, `${f}: description field preserved`);
 
     const bodyOut = out.replace(/^---\n[\s\S]*?\n---\n/, '');
@@ -228,11 +228,11 @@ test('does not touch a `model:` mention in the body', () => {
   assert.equal(transformOpencodeAgentFrontmatter(src), src);
 });
 
-// ── The shipped cavecrew agents must survive the transform ───────────────
-test('shipped cavecrew agents carry no bare alias after transform', () => {
+// ── The shipped cstcrew agents must survive the transform ───────────────
+test('shipped cstcrew agents carry no bare alias after transform', () => {
   const agentsDir = path.join(REPO_ROOT, 'agents');
-  const files = fs.readdirSync(agentsDir).filter(f => f.startsWith('cavecrew-') && f.endsWith('.md'));
-  assert.ok(files.length > 0, 'expected cavecrew agent files');
+  const files = fs.readdirSync(agentsDir).filter(f => f.startsWith('cstcrew-') && f.endsWith('.md'));
+  assert.ok(files.length > 0, 'expected cstcrew agent files');
   for (const file of files) {
     const out = transformOpencodeAgentFrontmatter(fs.readFileSync(path.join(agentsDir, file), 'utf8'));
     const fm = frontmatter(out);
@@ -246,7 +246,7 @@ test('shipped cavecrew agents carry no bare alias after transform', () => {
 
 // ── opencode Tab cycle (#725) ─────────────────────────────────────────────
 // opencode defaults an agent's `mode` to `all`, and Tab cycles every
-// primary-capable agent, so the cavecrew helpers landed in the Tab rotation.
+// primary-capable agent, so the cstcrew helpers landed in the Tab rotation.
 test('subagent option adds `mode: subagent` when frontmatter has no mode', () => {
   const src = '---\nname: a\ndescription: >\n  folded text\n---\nbody\n';
   const out = transformOpencodeAgentFrontmatter(src, { subagent: true });

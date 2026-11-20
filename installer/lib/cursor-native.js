@@ -3,7 +3,7 @@
 // Cursor native install, run after `npx skills add -a cursor` put the skills in
 // ~/.cursor/skills:
 //
-//   ~/.cursor/agents/cavecrew-*.md  subagents (IDE, Agents Window and CLI all
+//   ~/.cursor/agents/cstcrew-*.md  subagents (IDE, Agents Window and CLI all
 //                                   read this directory on every OS)
 //   ~/.cursor/cstman/...           the shared sessionStart hook payload
 //   ~/.cursor/hooks.json            one sessionStart entry pointing at it
@@ -23,9 +23,9 @@ const { transformOpencodeAgentFrontmatter } = require('./opencode-agent');
 
 const INTEGRATION = 'cursor';
 const CURSOR_AGENT_SPECS = [
-  { file: 'cavecrew-investigator.md', readonly: true },
-  { file: 'cavecrew-builder.md', readonly: false },
-  { file: 'cavecrew-reviewer.md', readonly: true },
+  { file: 'cstcrew-investigator.md', readonly: true },
+  { file: 'cstcrew-builder.md', readonly: false },
+  { file: 'cstcrew-reviewer.md', readonly: true },
 ];
 
 function cursorConfigDir(home) {

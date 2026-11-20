@@ -24,11 +24,11 @@ this harness did and is why its numbers were inflated.
 
 `snapshots/results.json` was generated on `claude-opus-5-5` with Claude
 Code 2.1.288 (2026-10-02), with the three response-style skills as the
-skill arms: `cstman`, `ultracave`, `megacave`. The other `skills/*`
+skill arms: `cstman`, `ultracst`, `megacst`. The other `skills/*`
 directories are workflow skills, not response styles, so they are left out.
 
 ```bash
-CSTMAN_EVAL_MODEL=claude-opus-5-5 CSTMAN_EVAL_SKILLS=cstman,ultracave,megacave \
+CSTMAN_EVAL_MODEL=claude-opus-5-5 CSTMAN_EVAL_SKILLS=cstman,ultracst,megacst \
   python3 evals/llm_run.py
 ```
 
@@ -99,7 +99,7 @@ By default every `skills/*/SKILL.md` gets an arm. `CSTMAN_EVAL_SKILLS`
 before any call:
 
 ```bash
-CSTMAN_EVAL_SKILLS=cstman,ultracave,megacave uv run python evals/llm_run.py
+CSTMAN_EVAL_SKILLS=cstman,ultracst,megacst uv run python evals/llm_run.py
 ```
 
 Each call times out after `CSTMAN_EVAL_TIMEOUT` seconds (default 300). A
@@ -179,7 +179,7 @@ calls. The first six cases come from
 
 ```bash
 CSTMAN_EVAL_SET=fidelity CSTMAN_EVAL_MODEL=claude-opus-5-5 \
-  CSTMAN_EVAL_SKILLS=cstman,ultracave,megacave python3 evals/llm_run.py
+  CSTMAN_EVAL_SKILLS=cstman,ultracst,megacst python3 evals/llm_run.py
 python3 evals/score_fidelity.py
 ```
 

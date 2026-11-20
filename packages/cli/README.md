@@ -115,7 +115,7 @@ checksum manifest plus every SHA-256, installs atomically into
 
 On Claude Code and Codex, the first `cstman <agent>` run (or
 `cstman enable <agent>` on an existing install) also writes the voice skills
-(`cstman`, `ultracave`, `megacave`) into the agent's user skills directory, so
+(`cstman`, `ultracst`, `megacst`) into the agent's user skills directory, so
 `/cstman` is available. An existing `SKILL.md` is never overwritten, and
 `cstman disable <agent>` leaves the skills in place.
 

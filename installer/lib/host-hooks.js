@@ -16,7 +16,7 @@ const path = require('path');
 const PAYLOAD_DIR = 'cstman';
 const HOOK_SCRIPT = 'cstman-host-session-start.js';
 const HOOK_FILES = [HOOK_SCRIPT, 'cstman-config.js', 'package.json'];
-const RULESET_SKILLS = ['cstman', 'ultracave', 'megacave'];
+const RULESET_SKILLS = ['cstman', 'ultracst', 'megacst'];
 
 // One owned directory, so uninstall removes it whole and the digest covers
 // every file. Callers attach `register` to wire the host's hook config.

@@ -72,8 +72,8 @@ MODE=$(printf '%s' "$MODE" | tr -cd 'a-z0-9-')
 # attacker bytes.
 case "$MODE" in
   caveman|cstman|lite|full) BADGE="CSTMAN" ;;
-  ultracave|ultra) BADGE="ULTRACAVE" ;;
-  megacave|wenyan|wenyan-lite|wenyan-full|wenyan-ultra) BADGE="MEGACAVE" ;;
+  ultracst|ultracave|ultra) BADGE="ULTRACST" ;;
+  megacst|megacave|wenyan|wenyan-lite|wenyan-full|wenyan-ultra) BADGE="MEGACST" ;;
   commit|review|compress) BADGE="CSTMAN:$(printf '%s' "$MODE" | tr '[:lower:]' '[:upper:]')" ;;
   *) exit 0 ;;
 esac

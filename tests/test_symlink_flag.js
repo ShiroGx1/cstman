@@ -104,7 +104,7 @@ test('safeWriteFlag then readFlag round-trip through symlink', (tmp) => {
 
   // Read back through the same symlink path
   const result = readFlag(flagPath);
-  assert.strictEqual(result, 'megacave');
+  assert.strictEqual(result, 'megacst');
 });
 
 test('refuses flag file that is itself a symlink (even through symlinked parent)', (tmp) => {
@@ -165,8 +165,8 @@ test('overwrites existing flag through symlinked parent', (tmp) => {
   safeWriteFlag(flagPath, 'cstman');
   assert.strictEqual(readFlag(flagPath), 'cstman');
 
-  safeWriteFlag(flagPath, 'ultracave');
-  assert.strictEqual(readFlag(flagPath), 'ultracave');
+  safeWriteFlag(flagPath, 'ultracst');
+  assert.strictEqual(readFlag(flagPath), 'ultracst');
 });
 
 test('creates parent directory via mkdirSync even when it does not exist yet', (tmp) => {
@@ -214,8 +214,8 @@ test('all valid modes round-trip through symlinked parent', (tmp) => {
 test('every legacy level name reads back as its skill mode', (tmp) => {
   const flagPath = path.join(tmp, '.cstman-active');
   const legacy = {
-    lite: 'cstman', full: 'cstman', ultra: 'ultracave', wenyan: 'megacave',
-    'wenyan-lite': 'megacave', 'wenyan-full': 'megacave', 'wenyan-ultra': 'megacave',
+    lite: 'cstman', full: 'cstman', ultra: 'ultracst', wenyan: 'megacst',
+    'wenyan-lite': 'megacst', 'wenyan-full': 'megacst', 'wenyan-ultra': 'megacst',
   };
   for (const [old, mode] of Object.entries(legacy)) {
     fs.writeFileSync(flagPath, old + '\n');
@@ -246,12 +246,12 @@ test('recovers from transient rename failures within the retry budget', (tmp) =>
     return realRenameSync(...args);
   };
   try {
-    safeWriteFlag(flagPath, 'ultracave');
+    safeWriteFlag(flagPath, 'ultracst');
   } finally {
     fs.renameSync = realRenameSync;
   }
 
-  assert.strictEqual(readFlag(flagPath), 'ultracave', 'flag should be written once the lock clears');
+  assert.strictEqual(readFlag(flagPath), 'ultracst', 'flag should be written once the lock clears');
   const leftovers = fs.readdirSync(flagDir).filter(n => n !== '.cstman-active');
   assert.deepStrictEqual(leftovers, [], 'no temp file should remain after a successful retry');
 });

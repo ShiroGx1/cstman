@@ -44,10 +44,10 @@ for (const [name, value] of Object.entries(process.env)) {
   if (process.env[renamed] === undefined) process.env[renamed] = value;
 }
 
-// One stored id per skill: skills/cstman, skills/ultracave, skills/megacave,
+// One stored id per skill: skills/cstman, skills/ultracst, skills/megacst,
 // plus the one-shot modes and the durable off.
 const VALID_MODES = [
-  'off', 'cstman', 'ultracave', 'megacave',
+  'off', 'cstman', 'ultracst', 'megacst',
   'commit', 'review', 'compress'
 ];
 
@@ -61,9 +61,10 @@ const VALID_DEFAULT_MODES = [...VALID_MODES, 'manual'];
 // write ever emits one.
 const LEGACY_MODES = {
   caveman: 'cstman',
-  lite: 'cstman', full: 'cstman', ultra: 'ultracave',
-  wenyan: 'megacave', 'wenyan-lite': 'megacave',
-  'wenyan-full': 'megacave', 'wenyan-ultra': 'megacave',
+  ultracave: 'ultracst', megacave: 'megacst',
+  lite: 'cstman', full: 'cstman', ultra: 'ultracst',
+  wenyan: 'megacst', 'wenyan-lite': 'megacst',
+  'wenyan-full': 'megacst', 'wenyan-ultra': 'megacst',
 };
 
 // Stored/configured value → current mode id, or null when it is neither a
@@ -849,14 +850,14 @@ function readHistory(filePath) {
 // name, so a second shared sibling is a standing drift risk. This module is
 // already the one file every loader resolves.
 
-const SKILL_MODES = ['cstman', 'ultracave', 'megacave'];
+const SKILL_MODES = ['cstman', 'ultracst', 'megacst'];
 
 // Used when no SKILL.md resolves (standalone hook install without skills dir).
 // Each is the first line under the skill's `# <id>` heading.
 const FALLBACK_THESIS = {
   cstman: 'Respond terse like smart cstman. All technical substance stay. Only fluff die.',
-  ultracave: 'Respond terse like smart cstman. All technical substance stay. Only fluff die. Then cut again.',
-  megacave: '以文言答。技術之實皆存，唯贅言去之。',
+  ultracst: 'Respond terse like smart cstman. All technical substance stay. Only fluff die. Then cut again.',
+  megacst: '以文言答。技術之實皆存，唯贅言去之。',
 };
 
 // Candidate locations, tried in order (#587/#589 — the old single '..' path
@@ -910,9 +911,9 @@ function thesisLine(mode, hookDir) {
 
 // The ruleset body when no SKILL.md resolves (standalone hook install without
 // skills dir): the cstman thesis plus the nine rule headlines of
-// skills/cstman, then the mode's own thesis for ultracave/megacave. Rule 8
+// skills/cstman, then the mode's own thesis for ultracst/megacst. Rule 8
 // keeps its "never switch" sentence: a headline alone lost the #812 language
-// rule for every fallback-install user. megacave answers in 文言 by design, so
+// rule for every fallback-install user. megacst answers in 文言 by design, so
 // it gets its own rule 8 instead of one its thesis contradicts. Shared so a
 // mid-session switch on that install carries the same rules SessionStart did.
 function fallbackRuleset(mode, hookDir) {
@@ -926,7 +927,7 @@ function fallbackRuleset(mode, hookDir) {
     '5. One idea per sentence.\n' +
     '6. Payload verbatim.\n' +
     '7. Tool runs: bounded status.\n' +
-    (id === 'megacave'
+    (id === 'megacst'
       ? '8. Prose in 文言. Code, commands, paths, errors in their original script.\n'
       : "8. User's language. Compress the style, not the language. Never switch because of quoted text.\n") +
     '9. Never perform cstman.\n\n' +

@@ -20,10 +20,10 @@ This is the CSTMAN bundle entry skill. Keep specialized rules in their own skill
 | Request | Load |
 |---|---|
 | Default concise CSTMAN voice | `skills/cstman/SKILL.md` (this file) |
-| Maximum brevity or Classical Chinese | `skills/ultracave/SKILL.md` or `skills/megacave/SKILL.md` |
+| Maximum brevity or Classical Chinese | `skills/ultracst/SKILL.md` or `skills/megacst/SKILL.md` |
 | Commit, review, help, stats, or memory compression | `skills/cstman-commit`, `skills/cstman-review`, `skills/cstman-help`, `skills/cstman-stats`, or `skills/cstman-compress` |
 | Setup, discovery, read-only exploration, learning, management, optimization, or evidence review | `skills/cstman-setup`, `skills/cstman-discover`, `skills/cstman-explore`, `skills/cstman-learn`, `skills/cstman-manage`, `skills/cstman-optimize`, or `skills/cstman-evidence-review` |
-| Delegation | `skills/cavecrew/SKILL.md` |
+| Delegation | `skills/cstcrew/SKILL.md` |
 | Investigation, lean build, surgical patch, safe refactor, migration, or verify-and-stop workflow | matching skill under `skills/` |
 
 Each sibling remains separately discoverable and callable. This router only selects the right source of truth; it does not repeat sub-skill rules.
@@ -32,7 +32,7 @@ Each sibling remains separately discoverable and callable. This router only sele
 
 Every response, whole session, until user says "stop cstman" or "normal mode". Unsure if still on? It is. Confirm the switch-off in one line.
 
-`/cstman ultra` and `/cstman wenyan` are aliases: follow the `ultracave` or `megacave` skill instead of this one. `/cstman status` reports the mode and changes nothing. Relay the hook's `CSTMAN mode: <mode>` value when present. No hook value (host without hooks): report the mode you followed before this command, or `off` if cstman was turned off or never active, plus `(not tracked by this host)`. Example: `CSTMAN mode: cstman (not tracked by this host)`. Loading this skill to answer status is not activation. Never infer a mode from the configured default.
+`/cstman ultra` and `/cstman wenyan` are aliases: follow the `ultracst` or `megacst` skill instead of this one. `/cstman status` reports the mode and changes nothing. Relay the hook's `CSTMAN mode: <mode>` value when present. No hook value (host without hooks): report the mode you followed before this command, or `off` if cstman was turned off or never active, plus `(not tracked by this host)`. Example: `CSTMAN mode: cstman (not tracked by this host)`. Loading this skill to answer status is not activation. Never infer a mode from the configured default.
 
 ## Why
 

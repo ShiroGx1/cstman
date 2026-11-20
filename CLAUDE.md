@@ -68,9 +68,9 @@ cstman/
 │   ├── cstman-help/{SKILL.md, README.md}
 │   ├── cstman-stats/{SKILL.md, README.md}
 │   ├── cstman-compress/{SKILL.md, README.md, scripts/}
-│   └── cavecrew/{SKILL.md, README.md}
+│   └── cstcrew/{SKILL.md, README.md}
 │
-├── agents/                      # cavecrew subagents (single source — kept at root for plugin auto-discovery)
+├── agents/                      # cstcrew subagents (single source — kept at root for plugin auto-discovery)
 │   └── docs/                    # profile-registry docs — NOT agents (see note below)
 ├── commands/                    # Codex/Gemini TOML command stubs (root for plugin auto-discovery)
 │
@@ -118,21 +118,21 @@ cstman/
 
 | File | What it controls |
 |------|-----------------|
-| `skills/cstman/SKILL.md` | The cstman voice: rules, auto-clarity, persistence. Sibling skills `skills/ultracave/SKILL.md` (grammar stripped) and `skills/megacave/SKILL.md` (文言文) are self-contained and each map 1:1 to a stored mode. Edit these three for behavior changes. |
+| `skills/cstman/SKILL.md` | The cstman voice: rules, auto-clarity, persistence. Sibling skills `skills/ultracst/SKILL.md` (grammar stripped) and `skills/megacst/SKILL.md` (文言文) are self-contained and each map 1:1 to a stored mode. Edit these three for behavior changes. |
 | `src/rules/cstman-activate.md` | Always-on auto-activation rule body, consumed by `src/tools/cstman-init.js` (per-repo IDE rule files) and by the opencode `AGENTS.md` block. GENERATED: `skills/compile.mjs` derives it from `skills/cstman/SKILL.md` (thesis line + rule headlines) plus the fixed tail in `skills/activation-rule.mjs`, and rewrites the `RULE_BODY` fallback in `cstman-init.js` to match. Edit the skill or the tail, rerun `node packages/cli/scripts/compile-registries.mjs`; `tests/installer/rule-copies.test.mjs` fails on drift. |
 | `src/rules/cstman-openclaw-bootstrap.md` | Marker-fenced bootstrap snippet appended to `~/.openclaw/workspace/SOUL.md` by `installer/lib/openclaw.js`. Drives always-on cstman through the OpenClaw gateway. Must include the SENTINEL `Respond terse like smart cstman` and stay well under OpenClaw's 12K-per-bootstrap-file cap. |
-| `.codex/codex-sessionstart.js` | Repo-local Codex SessionStart hook. Resolves the configured default mode through `src/hooks/cstman-config.js` and emits the active skill's ruleset whole, replacing the hardcoded `full`-level echo `.codex/hooks.json` used to carry — so `CSTMAN_DEFAULT_MODE`, a repo-local `.cstman.json` and a user-config `defaultMode: "off"` all take effect on Codex. Also the user-level always-on hook (#573): `installer/install.js --only codex` copies it (shipped via `package.json` `files`) into the owned payload `$CODEX_HOME/cstman/hooks/` beside `cstman-config.js` and `package.json`, with `cstman/skills/{cstman,ultracave,megacave}/SKILL.md`, and merges one SessionStart entry into `$CODEX_HOME/hooks.json`, identified by that script path so foreign and cstman-CLI `native-hook` entries are never touched. `--no-hooks`/`--minimal` skip it; uninstall unmerges before removing the payload. Codex asks the user to trust a new hook via `/hooks`; never pre-trust it. Carries a hand-copied `FALLBACK_VALID_MODES` for when the shared resolver is absent; `tests/hooks/codex-sessionstart.test.mjs` fails if it drifts from `VALID_MODES`. |
+| `.codex/codex-sessionstart.js` | Repo-local Codex SessionStart hook. Resolves the configured default mode through `src/hooks/cstman-config.js` and emits the active skill's ruleset whole, replacing the hardcoded `full`-level echo `.codex/hooks.json` used to carry — so `CSTMAN_DEFAULT_MODE`, a repo-local `.cstman.json` and a user-config `defaultMode: "off"` all take effect on Codex. Also the user-level always-on hook (#573): `installer/install.js --only codex` copies it (shipped via `package.json` `files`) into the owned payload `$CODEX_HOME/cstman/hooks/` beside `cstman-config.js` and `package.json`, with `cstman/skills/{cstman,ultracst,megacst}/SKILL.md`, and merges one SessionStart entry into `$CODEX_HOME/hooks.json`, identified by that script path so foreign and cstman-CLI `native-hook` entries are never touched. `--no-hooks`/`--minimal` skip it; uninstall unmerges before removing the payload. Codex asks the user to trust a new hook via `/hooks`; never pre-trust it. Carries a hand-copied `FALLBACK_VALID_MODES` for when the shared resolver is absent; `tests/hooks/codex-sessionstart.test.mjs` fails if it drifts from `VALID_MODES`. |
 | `installer/lib/openclaw.js` | OpenClaw install/uninstall helper. Frontmatter merge (`version`, `always: true`), SOUL.md marker append/strip, idempotent. Shared by `installer/install.js` and `src/tools/cstman-init.js`. |
 | `skills/cstman-commit/SKILL.md` | CSTMAN commit message behavior. Fully independent skill. |
 | `skills/cstman-review/SKILL.md` | CSTMAN code review behavior. Fully independent skill. |
 | `skills/cstman-help/SKILL.md` | Quick-reference card. One-shot display, not a persistent mode. |
 | `skills/cstman-compress/SKILL.md` | Compress sub-skill behavior. |
-| `skills/cavecrew/SKILL.md` | Cavecrew decision guide — when to delegate to cstman subagents vs vanilla. Edit only here. |
+| `skills/cstcrew/SKILL.md` | CST Crew decision guide — when to delegate to cstman subagents vs vanilla. Edit only here. |
 | `skills/{cstman-setup,cstman-discover,cstman-learn,cstman-manage,cstman-optimize,cstman-explore,cstman-evidence-review}/SKILL.md` | Engine/proxy driver skills. Ship with the plugin (see the auto-discovery note below). |
 | `skills/{investigate-first,lean-build,surgical-patch,safe-refactor,migration,verify-and-stop}/SKILL.md` | Token-discipline work patterns — same goal as cstman prose (fewer output tokens) applied to code volume rather than wording. Deliberately un-branded so they read as generic patterns to the model. Ship with the plugin. |
-| `agents/cavecrew-investigator.md` | Read-only locator subagent (haiku). Output contract: `path:line — symbol — note`. |
-| `agents/cavecrew-builder.md` | Surgical 1-2 file editor subagent. Refuses 3+ file scope. |
-| `agents/cavecrew-reviewer.md` | Diff/file reviewer subagent (haiku). One-line findings with severity emoji. |
+| `agents/cstcrew-investigator.md` | Read-only locator subagent (haiku). Output contract: `path:line — symbol — note`. |
+| `agents/cstcrew-builder.md` | Surgical 1-2 file editor subagent. Refuses 3+ file scope. |
+| `agents/cstcrew-reviewer.md` | Diff/file reviewer subagent (haiku). One-line findings with severity emoji. |
 | `src/plugins/opencode/plugin.js` | opencode native plugin. ESM Bun module — `session.created` writes flag, `tui.prompt.append` parses slash/natural-language activation and appends per-prompt reinforcement. Reuses `cstman-config.js` via `createRequire`. |
 | `src/plugins/opencode/commands/*.md` | Six opencode slash-command prompt templates (`/cstman`, `/cstman-{commit,review,compress,stats,help}`). |
 
@@ -152,10 +152,10 @@ actual directory listing — `ls skills/` is the source of truth.
 ### `agents/*.md` is auto-discovered too — and `plugin.json` must NOT list them
 
 Same mechanism, sharper edge. `plugin.json` used to carry an explicit
-`"agents": ["./agents/cavecrew-*.md"]` array. On Claude Code 2.1.235 that array
+`"agents": ["./agents/cstcrew-*.md"]` array. On Claude Code 2.1.235 that array
 loads **zero** agents — `claude plugin details cstman` reports `Agents (0)`
-with it and `Agents (3)` without it, so the three cavecrew subagents the
-`cavecrew` skill delegates to did not exist for any plugin user. The docs say
+with it and `Agents (3)` without it, so the three cstcrew subagents the
+`cstcrew` skill delegates to did not exist for any plugin user. The docs say
 `string | string[]` is valid and a directory string is rejected outright
 (`agents: Invalid input`), so the default `agents/` scan is the only path that
 works. Do not re-add the key.
@@ -164,7 +164,7 @@ Consequence: **every `.md` anywhere in `agents/` becomes a subagent**, named
 from its frontmatter or filename. Maintainer documentation belongs outside that
 tree; profile-registry orientation lives in
 `docs/technical/agent-profile-registry.md`. `tests/verify_repo.py` fails build
-if any markdown beyond three intended cavecrew agents appears under `agents/`.
+if any markdown beyond three intended cstcrew agents appears under `agents/`.
 
 ### `commands/*.md` shadows same-named skills — keep the `.md` stubs unique
 
@@ -180,7 +180,7 @@ twin. Guarded by `tests/verify_repo.py`.
 
 We removed the agent-specific dotdir mirrors at the repo root (`.cursor/`, `.windsurf/`, `.clinerules/`, `.github/copilot-instructions.md`, root `cstman/SKILL.md`). They were never read by the installer — only used to self-apply cstman to this repo when a maintainer opened it in Cursor/Windsurf/Cline. Devs who want cstman in their editor while editing this repo should run `npx -y github:JuliusBrussee/cstman -- --with-init` once (writes per-repo rule files from `src/rules/cstman-activate.md` via `src/tools/cstman-init.js`). For per-user installs through the upstream skills CLI, `npx -y github:JuliusBrussee/cstman -- --only <agent>` runs `npx skills add ... -a <profile>`.
 
-A handful of dotdir leftovers (`.junie/`, `.kiro/`, `.roo/`, `.agents/`) still hold a stale `cavecrew/SKILL.md` mirror from before the cleanup. They aren't read by anything in the current install path; remove on sight, no migration needed.
+A handful of dotdir leftovers (`.junie/`, `.kiro/`, `.roo/`, `.agents/`) still hold a stale `cstcrew/SKILL.md` mirror from before the cleanup. They aren't read by anything in the current install path; remove on sight, no migration needed.
 
 What's left is the Claude Code plugin distribution (required by the plugin loader) and the release ZIP.
 
@@ -188,8 +188,8 @@ What's left is the Claude Code plugin distribution (required by the plugin loade
 |------|-------------|
 | `plugins/cstman/skills/cstman/SKILL.md` | `skills/cstman/SKILL.md` |
 | `plugins/cstman/skills/cstman-compress/SKILL.md` (+ `scripts/`) | `skills/cstman-compress/SKILL.md` (+ `scripts/`) |
-| `plugins/cstman/skills/cavecrew/SKILL.md` | `skills/cavecrew/SKILL.md` |
-| `plugins/cstman/agents/cavecrew-*.md` | `agents/cavecrew-*.md` |
+| `plugins/cstman/skills/cstcrew/SKILL.md` | `skills/cstcrew/SKILL.md` |
+| `plugins/cstman/agents/cstcrew-*.md` | `agents/cstcrew-*.md` |
 | `dist/cstman.skill` | ZIP of `skills/cstman/` directory (gitignored; rebuilt by CI on release) |
 
 Skills not in this table (`cstman-commit`, `cstman-review`, `cstman-help`, `cstman-stats`) are not mirrored into the Claude Code plugin distribution by CI. They reach Claude Code through the standalone hook + skill install path, and reach other agents via `npx skills add`. A `plugins/cstman/skills/cstman-stats/` directory is currently checked in as a hand-committed copy; the sync workflow does not touch it, so don't rely on edits there to propagate.
@@ -198,12 +198,12 @@ Skills not in this table (`cstman-commit`, `cstman-review`, `cstman-help`, `cstm
 
 ## CI sync workflow
 
-`.github/workflows/sync-skill.yml` triggers on main push when `skills/**/SKILL.md` or `agents/cavecrew-*.md` changes.
+`.github/workflows/sync-skill.yml` triggers on main push when `skills/**/SKILL.md` or `agents/cstcrew-*.md` changes.
 
 What it does:
-1. Copies `skills/cstman/SKILL.md` and `skills/cavecrew/SKILL.md` into their `plugins/cstman/skills/<name>/` mirrors so the Claude Code plugin loader sees the latest behavior.
+1. Copies `skills/cstman/SKILL.md` and `skills/cstcrew/SKILL.md` into their `plugins/cstman/skills/<name>/` mirrors so the Claude Code plugin loader sees the latest behavior.
 2. Copies `skills/cstman-compress/SKILL.md` and its `scripts/` into `plugins/cstman/skills/cstman-compress/`.
-3. Copies `agents/cavecrew-*.md` into `plugins/cstman/agents/`.
+3. Copies `agents/cstcrew-*.md` into `plugins/cstman/agents/`.
 4. Rebuilds `dist/cstman.skill` (ZIP of `skills/cstman/`) for the release artifact.
 5. Commits and pushes with `[skip ci]` to avoid loops.
 
@@ -228,7 +228,7 @@ SessionStart hook ──┐                                        ┌── Use
                           mirrors       reads
                              ▼             ▼
               .cstman-active      cstman-statusline.sh ◀── session JSON on stdin
-           (last-write-wins,        [CSTMAN] / [ULTRACAVE] / [MEGACAVE]
+           (last-write-wins,        [CSTMAN] / [ULTRACST] / [MEGACST]
             compat only)
 ```
 
@@ -276,7 +276,7 @@ Runs on every SessionStart — `source` is `startup`, `resume`, `clear`, `compac
 
 Silent-fails on all filesystem errors — never blocks session start.
 
-**`--subagent`: the SubagentStart hook (#621).** SessionStart context reaches only the parent thread, so the same script is registered for SubagentStart with `--subagent` (plugin.json, `installer/install.js`, `src/hooks/install.{sh,ps1}`). It reuses the stdin reader and watchdog, resolves THIS session's mode via `resolveActiveMode` (a session with no stored state at all — SessionStart skipped or failed, or the session predates the store — falls back to the last-write-wins legacy mirror, the same degrade the tracker's reinforcement uses, so a subagent matches its parent thread; pinned in `tests/hooks/subagent-start.test.mjs`), and prints `{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":<that mode's skill>}}`. Nothing is printed when the session stored `off` (no "stop cstman" leak, #672; another window's mode never overrides a stored `off`), in a one-shot mode, for `cavecrew-*` agents (they carry their own ultracave voice), or under a repo `defaultMode: "off"` (#634, same gate as the tracker's reinforcement). Read-only: no mode write, no mode log, no GC, no nudge, no cavecrew model overrides. Uninstall needs nothing extra — `removeCSTMANHooks` walks every event and matches the `cstman-activate.js` basename.
+**`--subagent`: the SubagentStart hook (#621).** SessionStart context reaches only the parent thread, so the same script is registered for SubagentStart with `--subagent` (plugin.json, `installer/install.js`, `src/hooks/install.{sh,ps1}`). It reuses the stdin reader and watchdog, resolves THIS session's mode via `resolveActiveMode` (a session with no stored state at all — SessionStart skipped or failed, or the session predates the store — falls back to the last-write-wins legacy mirror, the same degrade the tracker's reinforcement uses, so a subagent matches its parent thread; pinned in `tests/hooks/subagent-start.test.mjs`), and prints `{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":<that mode's skill>}}`. Nothing is printed when the session stored `off` (no "stop cstman" leak, #672; another window's mode never overrides a stored `off`), in a one-shot mode, for `cstcrew-*` agents (they carry their own ultracst voice), or under a repo `defaultMode: "off"` (#634, same gate as the tracker's reinforcement). Read-only: no mode write, no mode log, no GC, no nudge, no cstcrew model overrides. Uninstall needs nothing extra — `removeCSTMANHooks` walks every event and matches the `cstman-activate.js` basename.
 
 ### `src/hooks/cstman-mode-tracker.js` — UserPromptSubmit hook
 
@@ -284,8 +284,8 @@ Reads JSON from stdin — `session_id` scopes every read and write. Three respon
 
 **1. Slash-command activation.** If prompt starts with `/cstman`, writes the session's mode via `writeSessionMode`:
 - `/cstman` → configured default (see `cstman-config.js`, defaults to `cstman`)
-- `/ultracave` (alias `/cstman ultra`) → `ultracave`
-- `/megacave` (alias `/cstman wenyan`, any `wenyan-*`) → `megacave`
+- `/ultracst` (alias `/cstman ultra`) → `ultracst`
+- `/megacst` (alias `/cstman wenyan`, any `wenyan-*`) → `megacst`
 - `/cstman lite` or `/cstman full` (legacy aliases) → `cstman`
 - `/cstman-commit` → `commit`
 - `/cstman-review` → `review`
@@ -300,7 +300,7 @@ Reads JSON from stdin — `session_id` scopes every read and write. Three respon
 Reads the session JSON Claude Code pipes to it on stdin, extracts `session_id` (pure bash — no `jq` dependency), and reads `.cstman-sessions/<id>.mode`; falls back to `$CLAUDE_CONFIG_DIR/.cstman-active` when there is no usable id. Outputs colored badge string for Claude Code statusline:
 - `cstman` or empty → `[CSTMAN]` (orange)
 - `off` → nothing at all. Never `[CSTMAN:OFF]` — that reads as a mode rather than the absence of one
-- `ultracave` → `[ULTRACAVE]`, `megacave` → `[MEGACAVE]`; one-shots → `[CSTMAN:<MODE_UPPERCASED>]` (orange). Legacy stored values render through the same map
+- `ultracst` → `[ULTRACST]`, `megacst` → `[MEGACST]`; one-shots → `[CSTMAN:<MODE_UPPERCASED>]` (orange). Legacy stored values render through the same map
 
 Stdin is bounded the same way as the SessionStart hook: `[ ! -t 0 ]` skips an interactive terminal, and `read -r -d '' -t 1` caps the wait. The timeout is an **integer on purpose** — macOS ships bash 3.2, which rejects `-t 0.3` with `invalid timeout specification`.
 
@@ -336,7 +336,7 @@ Each skill has a human-facing `README.md` alongside the LLM-facing `SKILL.md`. T
 
 ### Three skills, one mode model
 
-Three self-contained skills, each 1:1 with a stored mode id: `cstman` (default voice), `ultracave` (grammar stripped), `megacave` (文言文). The SessionStart hook injects `skills/<id>/SKILL.md` whole; there is no per-level filtering. Legacy stored values map on read: `lite` and `full` → `cstman`, `ultra` → `ultracave`, every `wenyan*` → `megacave`. Writes emit new ids only. Mode persists until changed or session ends. Plan: `docs/technical/three-skills-refactor.md`.
+Three self-contained skills, each 1:1 with a stored mode id: `cstman` (default voice), `ultracst` (grammar stripped), `megacst` (文言文). The SessionStart hook injects `skills/<id>/SKILL.md` whole; there is no per-level filtering. Legacy stored values map on read: `lite` and `full` → `cstman`, `ultra` → `ultracst`, every `wenyan*` → `megacst`. Writes emit new ids only. Mode persists until changed or session ends. Plan: `docs/technical/three-skills-refactor.md`.
 
 `defaultMode: "manual"` is a Claude Code startup policy, not a fourth mode. It starts inactive, stores only `off`, and explicit bare-command or natural-language activation resolves to `cstman`. Keep it out of `VALID_MODES`; only configuration accepts it. OpenCode maps this policy to its existing cstman default because its installer also supplies static AGENTS.md activation. `/cstman status` is read-only and must return before one-shot restoration or any mode-state mutation.
 
@@ -367,7 +367,7 @@ How cstman reaches each agent type:
 | Gemini CLI | Extension with `GEMINI.md` context file | Yes — context file loads every session |
 | opencode | Native plugin (`src/plugins/opencode/`) copied into `$OPENCODE_CONFIG_DIR/plugins/cstman/` (default `~/.config/opencode/plugins/cstman/`) + `AGENTS.md` ruleset + skills/agents/commands directories. Plugin uses `session.created` and `tui.prompt.append` lifecycle hooks. No statusline (opencode TUI exposes no plugin-writable badge). | Yes — `session.created` writes flag, `AGENTS.md` carries always-on ruleset |
 | OpenClaw | Workspace skill at `~/.openclaw/workspace/skills/cstman/SKILL.md` (frontmatter merged with `version` + `always: true`) plus a marker-fenced bootstrap block in `~/.openclaw/workspace/SOUL.md`. Both writes go through `installer/lib/openclaw.js`; workspace path is overridable via `OPENCLAW_WORKSPACE`. | Yes — SOUL.md is auto-injected each turn under "Project Context" (subject to OpenClaw's 12K-per-file / 60K-total bootstrap caps) |
-| Cursor | Plugin (`.cursor-plugin/plugin.json`: skills + `hooks/hooks-cursor.json` sessionStart hook) or `--only cursor`: `npx skills add ... -a cursor -g` skills, then `installer/lib/cursor-native.js` owns cavecrew agents in `~/.cursor/agents/` (Claude `model:` dropped, `readonly: true` on investigator/reviewer) and the shared hook payload in `~/.cursor/cstman/` with one sessionStart entry merged into `~/.cursor/hooks.json`. Both hooks run `src/hooks/cstman-host-session-start.js cursor`. Per-repo `.cursor/rules/cstman.mdc` via `--with-init`. Pick plugin OR `--only cursor`, not both (two hooks inject twice). | Yes — sessionStart `additional_context`, honors `defaultMode` (off/manual inject nothing) |
+| Cursor | Plugin (`.cursor-plugin/plugin.json`: skills + `hooks/hooks-cursor.json` sessionStart hook) or `--only cursor`: `npx skills add ... -a cursor -g` skills, then `installer/lib/cursor-native.js` owns cstcrew agents in `~/.cursor/agents/` (Claude `model:` dropped, `readonly: true` on investigator/reviewer) and the shared hook payload in `~/.cursor/cstman/` with one sessionStart entry merged into `~/.cursor/hooks.json`. Both hooks run `src/hooks/cstman-host-session-start.js cursor`. Per-repo `.cursor/rules/cstman.mdc` via `--with-init`. Pick plugin OR `--only cursor`, not both (two hooks inject twice). | Yes — sessionStart `additional_context`, honors `defaultMode` (off/manual inject nothing) |
 | Windsurf | `npx skills add ... -a windsurf` (default via `--only windsurf`); per-repo `.windsurf/rules/cstman.md` via `--with-init` | Yes — always-on rule |
 | Cline | `npx skills add ... -a cline` (default via `--only cline`); per-repo `.clinerules/cstman.md` via `--with-init` | Yes — Cline auto-discovers `.clinerules/` |
 | Copilot | `npx skills add ... -a github-copilot` (detected via the `copilot` CLI plus its `~/.copilot` dir, since AWS Copilot CLI ships a `copilot` binary too, or the VS Code/Cursor extension); per-repo `.github/copilot-instructions.md` + `AGENTS.md` via `--with-init`. When the Copilot CLI is present (`copilot` on PATH or `$COPILOT_HOME` set — not a bare `~/.copilot`, which `npx skills add -a github-copilot` itself creates) the installer also owns `$COPILOT_HOME/cstman/` (shared hook payload) and `$COPILOT_HOME/hooks/cstman.json` (sessionStart → `cstman-host-session-start.js copilot`); `--no-hooks` skips it. No userPromptSubmitted hook: Copilot drops its output. | Copilot CLI: yes — sessionStart `additionalContext`, honors `defaultMode`. VS Code Copilot Chat: repo-wide instructions via `--with-init` |

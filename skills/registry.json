@@ -16,7 +16,7 @@
     ]
   },
   "preserved_skill_ids": [
-    "cavecrew",
+    "cstcrew",
     "cstman-commit",
     "cstman-compress",
     "cstman-help",
@@ -242,7 +242,7 @@
       "stop_condition": "acceptance proof is complete"
     },
     {
-      "id": "ultracave",
+      "id": "ultracst",
       "summary": "CSTMAN at maximum compression: fragments, one word when one word is enough, each fact once.",
       "delivery": [
         "cli"
@@ -252,7 +252,7 @@
       ]
     },
     {
-      "id": "megacave",
+      "id": "megacst",
       "summary": "CSTMAN in Classical Chinese: wenyan register, technical terms verbatim.",
       "delivery": [
         "cli"
@@ -276,8 +276,8 @@
     ],
     "output": [
       "cstman",
-      "ultracave",
-      "megacave"
+      "ultracst",
+      "megacst"
     ]
   }
 }

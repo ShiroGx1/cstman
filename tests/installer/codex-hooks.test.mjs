@@ -58,7 +58,7 @@ test('codex install merges exactly one SessionStart hook, even when run twice', 
   // compaction is what prunes the injected ruleset.
   assert.equal(ours[0].matcher, 'startup|resume|clear|compact');
   for (const rel of [HOOK_REL, 'cstman/hooks/cstman-config.js', 'cstman/hooks/package.json',
-    'cstman/skills/cstman/SKILL.md', 'cstman/skills/ultracave/SKILL.md', 'cstman/skills/megacave/SKILL.md']) {
+    'cstman/skills/cstman/SKILL.md', 'cstman/skills/ultracst/SKILL.md', 'cstman/skills/megacst/SKILL.md']) {
     assert.ok(fs.existsSync(path.join(codexHome, ...rel.split('/'))), `${rel} missing`);
   }
 });
@@ -101,11 +101,11 @@ test('installed hook follows the configured default mode', (t) => {
   const off = exec('off');
   assert.equal(off.status, 0);
   assert.equal(off.stdout, '');
-  const ultra = exec('ultracave');
+  const ultra = exec('ultracst');
   assert.equal(ultra.status, 0);
-  const body = fs.readFileSync(path.join(ROOT, 'skills', 'ultracave', 'SKILL.md'), 'utf8').replace(/^---[\s\S]*?---\s*/, '');
-  assert.ok(ultra.stdout.startsWith('CSTMAN MODE ACTIVE — mode: ultracave\n\n'), ultra.stdout.slice(0, 200));
-  assert.ok(ultra.stdout.endsWith(body), 'full ultracave ruleset expected');
+  const body = fs.readFileSync(path.join(ROOT, 'skills', 'ultracst', 'SKILL.md'), 'utf8').replace(/^---[\s\S]*?---\s*/, '');
+  assert.ok(ultra.stdout.startsWith('CSTMAN MODE ACTIVE — mode: ultracst\n\n'), ultra.stdout.slice(0, 200));
+  assert.ok(ultra.stdout.endsWith(body), 'full ultracst ruleset expected');
 });
 
 test('--no-hooks and --dry-run leave CODEX_HOME untouched', (t) => {
@@ -197,10 +197,10 @@ test('--hook-node node writes a PATH-resolved command that runs, and a plain re-
   } else {
     assert.ok(command.startsWith('"node" "'), command);
     // The command really resolves node through PATH at hook time.
-    const hookEnv = { ...env, PATH: `${path.dirname(process.execPath)}:/usr/bin:/bin`, CSTMAN_DEFAULT_MODE: 'ultracave' };
+    const hookEnv = { ...env, PATH: `${path.dirname(process.execPath)}:/usr/bin:/bin`, CSTMAN_DEFAULT_MODE: 'ultracst' };
     const ran = spawnSync('/bin/sh', ['-c', command], { encoding: 'utf8', cwd: dir, env: hookEnv });
     assert.equal(ran.status, 0, ran.stderr);
-    assert.ok(ran.stdout.startsWith('CSTMAN MODE ACTIVE — mode: ultracave'), ran.stdout.slice(0, 120));
+    assert.ok(ran.stdout.startsWith('CSTMAN MODE ACTIVE — mode: ultracst'), ran.stdout.slice(0, 120));
   }
   r = run('--only', 'codex');
   assert.equal(r.status, 0, r.stdout + r.stderr);

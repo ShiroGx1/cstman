@@ -82,7 +82,7 @@ test('isolated Claude install and uninstall complete without network or real use
 
     const hooks = path.join(configDir, 'hooks');
     for (const file of ['cstman-config.js', 'cstman-parse.js', 'cstman-activate.js',
-      'cstman-mode-tracker.js', 'cstman-stats.js', STATUSLINE_FILE, 'cavecrew-model-overrides.js']) {
+      'cstman-mode-tracker.js', 'cstman-stats.js', STATUSLINE_FILE, 'cstcrew-model-overrides.js']) {
       assert.ok(fs.existsSync(path.join(hooks, file)), `${file} missing after install`);
     }
     const settings = JSON.parse(fs.readFileSync(path.join(configDir, 'settings.json'), 'utf8'));
@@ -94,7 +94,7 @@ test('isolated Claude install and uninstall complete without network or real use
     const removed = runInstaller(['--uninstall'], configDir, env);
     assert.equal(removed.status, 0, removed.stderr || removed.stdout);
     for (const file of ['cstman-config.js', 'cstman-parse.js', 'cstman-activate.js',
-      'cstman-mode-tracker.js', 'cstman-stats.js', STATUSLINE_FILE, 'cavecrew-model-overrides.js']) {
+      'cstman-mode-tracker.js', 'cstman-stats.js', STATUSLINE_FILE, 'cstcrew-model-overrides.js']) {
       assert.equal(fs.existsSync(path.join(hooks, file)), false, `${file} survived uninstall`);
     }
     const clean = JSON.parse(fs.readFileSync(path.join(configDir, 'settings.json'), 'utf8'));

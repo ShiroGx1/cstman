@@ -54,14 +54,14 @@ test("popup loads Chrome storage and persists master, level, and site controls",
     "https://chromewebstore.google.com/detail/fixture-extension-id/reviews",
   );
 
-  await page.locator('label:has(input[name="level"][value="ultracave"]) span').click();
+  await page.locator('label:has(input[name="level"][value="ultracst"]) span').click();
   await expect(page.locator("#levelHint")).toContainText("Grammar stripped");
   await page.locator('label:has(input[data-site="claude.ai"]) span').click();
   await page.locator("label.switch .slider").click();
   await expect(page.locator("body")).toHaveAttribute("data-enabled", "0");
   await expect.poll(() => page.evaluate(() => window.__cstmanPopupStore)).toEqual({
     enabled: false,
-    level: "ultracave",
+    level: "ultracst",
     sites: { "claude.ai": false },
   });
 });

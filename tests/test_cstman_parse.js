@@ -37,8 +37,8 @@ console.log('cstman-parse (shared mode-change parser) tests\n');
 const defaultCSTMAN = { getDefaultMode: () => 'cstman' };
 const defaultOff = { getDefaultMode: () => 'off' };
 const MODE_OF = {
-  '/ultracave': 'ultracave', '/cstman:ultracave': 'ultracave',
-  '/megacave': 'megacave', '/cstman:megacave': 'megacave',
+  '/ultracst': 'ultracst', '/cstman:ultracst': 'ultracst',
+  '/megacst': 'megacst', '/cstman:megacst': 'megacst',
 };
 
 test('status uses one read-only verdict for literal and expanded commands', () => {
@@ -68,10 +68,10 @@ test('empty/whitespace prompt is a no-op', () => {
   assert.strictEqual(parseModeChange('   ', defaultCSTMAN), null);
 });
 
-test('/ultracave and /megacave set their own mode, bare or namespaced', () => {
+test('/ultracst and /megacst set their own mode, bare or namespaced', () => {
   for (const [prompt, mode] of [
-    ['/ultracave', 'ultracave'], ['/cstman:ultracave', 'ultracave'],
-    ['/megacave', 'megacave'], ['/cstman:megacave', 'megacave'],
+    ['/ultracst', 'ultracst'], ['/cstman:ultracst', 'ultracst'],
+    ['/megacst', 'megacst'], ['/cstman:megacst', 'megacst'],
   ]) {
     assert.deepStrictEqual(parseModeChange(prompt, defaultCSTMAN), { action: 'set', mode }, prompt);
     // A configured default never overrides the command's own mode.
@@ -79,24 +79,33 @@ test('/ultracave and /megacave set their own mode, bare or namespaced', () => {
   }
 });
 
+test('old mode commands remain aliases for the renamed skills', () => {
+  for (const [prompt, mode] of [
+    ['/ultracave', 'ultracst'], ['/cstman:ultracave', 'ultracst'],
+    ['/megacave', 'megacst'], ['/cstman:megacave', 'megacst'],
+  ]) {
+    assert.deepStrictEqual(parseModeChange(prompt, defaultCSTMAN), { action: 'set', mode }, prompt);
+  }
+});
+
 test('/cstman <arg> accepts the three mode names', () => {
-  for (const mode of ['cstman', 'ultracave', 'megacave']) {
+  for (const mode of ['cstman', 'ultracst', 'megacst']) {
     assert.deepStrictEqual(parseModeChange('/cstman ' + mode, defaultCSTMAN), { action: 'set', mode });
   }
 });
 
 test('legacy level names still parse as aliases of the three modes', () => {
   for (const [arg, mode] of [
-    ['lite', 'cstman'], ['full', 'cstman'], ['ultra', 'ultracave'],
-    ['wenyan', 'megacave'], ['wenyan-lite', 'megacave'],
-    ['wenyan-full', 'megacave'], ['wenyan-ultra', 'megacave'],
+    ['lite', 'cstman'], ['full', 'cstman'], ['ultra', 'ultracst'],
+    ['wenyan', 'megacst'], ['wenyan-lite', 'megacst'],
+    ['wenyan-full', 'megacst'], ['wenyan-ultra', 'megacst'],
   ]) {
     assert.deepStrictEqual(parseModeChange('/cstman ' + arg, defaultCSTMAN), { action: 'set', mode }, arg);
   }
 });
 
-test('/ultracave and /megacave take the same off/status words as /cstman', () => {
-  for (const cmd of ['/ultracave', '/cstman:ultracave', '/megacave', '/cstman:megacave']) {
+test('/ultracst and /megacst take the same off/status words as /cstman', () => {
+  for (const cmd of ['/ultracst', '/cstman:ultracst', '/megacst', '/cstman:megacst']) {
     for (const word of ['off', 'stop', 'disable', 'off.']) {
       assert.deepStrictEqual(parseModeChange(`${cmd} ${word}`, defaultCSTMAN), { action: 'clear' }, `${cmd} ${word}`);
     }
@@ -109,9 +118,9 @@ test('/ultracave and /megacave take the same off/status words as /cstman', () =>
   }
 });
 
-test('/ultracave-like prefixes are not the command', () => {
+test('/ultracst-like prefixes are not the command', () => {
   assert.strictEqual(parseModeChange('/ultracstman', defaultCSTMAN), null);
-  assert.strictEqual(parseModeChange('/megacave-stats', defaultCSTMAN), null);
+  assert.strictEqual(parseModeChange('/megacst-stats', defaultCSTMAN), null);
 });
 
 test('bare /cstman activates at the configured default', () => {
@@ -149,18 +158,18 @@ test('independent modes are not reachable via /cstman <arg>', () => {
 // already harmless — it is the glued character that broke it.
 test('punctuation glued to the level still resolves (#838)', () => {
   for (const prompt of ['/cstman ultra;', '/cstman ultra.', '/cstman ultra!', '/cstman ultra,']) {
-    assert.deepStrictEqual(parseModeChange(prompt, defaultCSTMAN), { action: 'set', mode: 'ultracave' }, prompt);
+    assert.deepStrictEqual(parseModeChange(prompt, defaultCSTMAN), { action: 'set', mode: 'ultracst' }, prompt);
   }
 });
 
 test('punctuation glued to a hyphenated level still resolves (#838)', () => {
   assert.deepStrictEqual(
     parseModeChange('/cstman wenyan-ultra.', defaultCSTMAN),
-    { action: 'set', mode: 'megacave' }
+    { action: 'set', mode: 'megacst' }
   );
   assert.deepStrictEqual(
     parseModeChange('/cstman wenyan-full,', defaultCSTMAN),
-    { action: 'set', mode: 'megacave' }
+    { action: 'set', mode: 'megacst' }
   );
 });
 
@@ -171,7 +180,7 @@ test('punctuation glued to off still deactivates (#838)', () => {
 test('trailing words after the level remain harmless', () => {
   assert.deepStrictEqual(
     parseModeChange('/cstman ultra; still too verbose', defaultCSTMAN),
-    { action: 'set', mode: 'ultracave' }
+    { action: 'set', mode: 'ultracst' }
   );
 });
 
@@ -335,7 +344,7 @@ test('skipNaturalLanguage suppresses activation/deactivation matching entirely',
 test('skipNaturalLanguage still lets literal slash commands through', () => {
   assert.deepStrictEqual(
     parseModeChange('/cstman ultra', { ...defaultCSTMAN, skipNaturalLanguage: true }),
-    { action: 'set', mode: 'ultracave' }
+    { action: 'set', mode: 'ultracst' }
   );
 });
 
@@ -354,17 +363,17 @@ test('without unwrapQuotes, a quoted command does not match', () => {
 
 // ---------- expandedTpl (opencode's expanded command-template bodies) ----------
 
-test('expandedTpl recognizes the ultracave and megacave templates', () => {
+test('expandedTpl recognizes the ultracst and megacst templates', () => {
   const read = (name) => fs.readFileSync(
     path.join(__dirname, '..', 'src', 'plugins', 'opencode', 'commands', name), 'utf8',
   ).replace(/^---[\s\S]*?---\s*/, '');
   assert.deepStrictEqual(
-    parseModeChange(read('ultracave.md'), { ...defaultCSTMAN, expandedTpl: true }),
-    { action: 'set', mode: 'ultracave' }
+    parseModeChange(read('ultracst.md'), { ...defaultCSTMAN, expandedTpl: true }),
+    { action: 'set', mode: 'ultracst' }
   );
   assert.deepStrictEqual(
-    parseModeChange(read('megacave.md'), { ...defaultCSTMAN, expandedTpl: true }),
-    { action: 'set', mode: 'megacave' }
+    parseModeChange(read('megacst.md'), { ...defaultCSTMAN, expandedTpl: true }),
+    { action: 'set', mode: 'megacst' }
   );
   assert.deepStrictEqual(
     parseModeChange(read('cstman.md').replace('$ARGUMENTS', ''), { ...defaultCSTMAN, expandedTpl: true }),
@@ -375,7 +384,7 @@ test('expandedTpl recognizes the ultracave and megacave templates', () => {
 test('expandedTpl recognizes the generic "/cstman <arg>" template', () => {
   assert.deepStrictEqual(
     parseModeChange('Activate cstman mode: ultra', { ...defaultCSTMAN, expandedTpl: true }),
-    { action: 'set', mode: 'ultracave' }
+    { action: 'set', mode: 'ultracst' }
   );
 });
 
@@ -423,15 +432,15 @@ test('expandedTpl recognizes the independent-mode command templates (#602 drift)
 test('expandedTpl: no non-activation opencode template switches a prose mode', () => {
   // Every shipped command file, expanded the way opencode delivers it: front
   // matter stripped, $ARGUMENTS empty. /cstman-help listed "Activate cstman"
-  // in its table, which flipped ultracave back to cstman (or turned it on).
+  // in its table, which flipped ultracst back to cstman (or turned it on).
   const dir = path.join(__dirname, '..', 'src', 'plugins', 'opencode', 'commands');
-  const PROSE = new Set(['cstman', 'ultracave', 'megacave']);
+  const PROSE = new Set(['cstman', 'ultracst', 'megacst', 'ultracave', 'megacave']);
   const checked = [];
   for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.md'))) {
     if (PROSE.has(file.replace(/\.md$/, ''))) continue; // activation templates by design
     const body = fs.readFileSync(path.join(dir, file), 'utf8')
       .replace(/^---[\s\S]*?---\s*/, '').split('$ARGUMENTS').join('');
-    for (const getDefaultMode of [() => 'cstman', () => 'ultracave']) {
+    for (const getDefaultMode of [() => 'cstman', () => 'ultracst']) {
       const verdict = parseModeChange(body, { getDefaultMode, expandedTpl: true, unwrapQuotes: true });
       const switches = verdict && (verdict.action === 'clear' || (verdict.action === 'set' && PROSE.has(verdict.mode)));
       assert.ok(!switches, `${file} → ${JSON.stringify(verdict)}`);
@@ -542,7 +551,7 @@ test('a slash-initiated prompt does not fire natural-language triggers', () => {
 
 test('slash commands themselves are unaffected by prompt length', () => {
   const long = '/cstman ultra ' + 'x'.repeat(400);
-  assert.deepStrictEqual(parseModeChange(long, defaultCSTMAN), { action: 'set', mode: 'ultracave' });
+  assert.deepStrictEqual(parseModeChange(long, defaultCSTMAN), { action: 'set', mode: 'ultracst' });
 });
 
 // An independent mode IS a real mode, just not reachable this way — saying
@@ -555,14 +564,14 @@ test('an independent mode via /cstman <arg> reports its own command', () => {
 });
 
 test('a quoted level resolves (leading punctuation stripped too)', () => {
-  assert.deepStrictEqual(parseModeChange('/cstman "ultra"', defaultCSTMAN), { action: 'set', mode: 'ultracave' });
+  assert.deepStrictEqual(parseModeChange('/cstman "ultra"', defaultCSTMAN), { action: 'set', mode: 'ultracst' });
 });
 
 const parityCases = [
   { prompt: '/cstman ultra', preset: null },
-  { prompt: '/ultracave', preset: 'cstman' },
+  { prompt: '/ultracst', preset: 'cstman' },
   { prompt: '/cstman off', preset: 'cstman' },
-  { prompt: '/cstman not-a-real-level', preset: 'ultracave' },
+  { prompt: '/cstman not-a-real-level', preset: 'ultracst' },
   { prompt: 'be brief', preset: null },
   { prompt: 'activate cstman', preset: null },
   { prompt: 'stop cstman', preset: 'cstman' },

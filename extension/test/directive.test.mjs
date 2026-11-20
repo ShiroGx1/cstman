@@ -25,7 +25,7 @@ test("buildPrimer carries the activation + the selected mode clause", () => {
     assert.ok(primer.trimEnd().endsWith("]"), "primer is a single closed bracket directive");
     assert.equal(primer.indexOf("]"), primer.length - 1, "no early bracket close");
   }
-  assert.match(D.buildPrimer("megacave"), /文言文/);
+  assert.match(D.buildPrimer("megacst"), /文言文/);
 });
 
 test("each mode clause opens with its skill's thesis line", () => {
@@ -44,8 +44,8 @@ test("buildPrimer fails safe to CSTMAN on an unknown mode", () => {
 
 test("buildReminder is a short stay-in-mode nudge naming the mode", () => {
   assert.equal(D.buildReminder("cstman"), "[stay in cstman mode — CSTMAN]");
-  assert.equal(D.buildReminder("ultracave"), "[stay in cstman mode — ULTRACAVE]");
-  assert.equal(D.buildReminder("megacave"), "[stay in cstman mode — MEGACAVE]");
+  assert.equal(D.buildReminder("ultracst"), "[stay in cstman mode — ULTRACST]");
+  assert.equal(D.buildReminder("megacst"), "[stay in cstman mode — MEGACST]");
   assert.equal(D.buildReminder("nonsense"), "[stay in cstman mode — CSTMAN]");
 });
 
@@ -55,7 +55,7 @@ test("a reminder is much shorter than the primer (the smart-hybrid saving)", () 
 
 test("isPrefixed detects both primer and reminder, tolerating leading space/newlines", () => {
   assert.equal(D.isPrefixed(D.buildPrimer("cstman") + "\n\nhello"), true);
-  assert.equal(D.isPrefixed("\n  " + D.buildReminder("megacave") + "\n\nhi"), true);
+  assert.equal(D.isPrefixed("\n  " + D.buildReminder("megacst") + "\n\nhi"), true);
   assert.equal(D.isPrefixed("just a normal prompt"), false);
   assert.equal(D.isPrefixed(""), false);
   assert.equal(D.isPrefixed(null), false);
@@ -63,11 +63,13 @@ test("isPrefixed detects both primer and reminder, tolerating leading space/newl
 });
 
 test("normMode clamps to the three modes and maps saved lite/full/ultra values", () => {
-  assert.deepEqual(D.MODES, ["cstman", "ultracave", "megacave"]);
+  assert.deepEqual(D.MODES, ["cstman", "ultracst", "megacst"]);
   for (const mode of D.MODES) assert.equal(D.normMode(mode), mode);
   assert.equal(D.normMode("lite"), "cstman");
   assert.equal(D.normMode("full"), "cstman");
-  assert.equal(D.normMode("ultra"), "ultracave");
+  assert.equal(D.normMode("ultra"), "ultracst");
+  assert.equal(D.normMode("ultracave"), "ultracst");
+  assert.equal(D.normMode("megacave"), "megacst");
   assert.equal(D.normMode("WAT"), "cstman");
   assert.equal(D.normMode("__proto__"), "cstman");
 });

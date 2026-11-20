@@ -207,8 +207,8 @@ def verify_skill_frontmatter_upload_compatibility() -> None:
 
     skill_paths = [
         ROOT / "skills/cstman/SKILL.md",
-        ROOT / "skills/ultracave/SKILL.md",
-        ROOT / "skills/megacave/SKILL.md",
+        ROOT / "skills/ultracst/SKILL.md",
+        ROOT / "skills/megacst/SKILL.md",
         ROOT / "skills/cstman-commit/SKILL.md",
         ROOT / "skills/cstman-help/SKILL.md",
         ROOT / "skills/cstman-review/SKILL.md",
@@ -232,15 +232,15 @@ def verify_synced_files() -> None:
     # of four let the other three drift silently between runs.
     skill_copies = [
         (ROOT / "plugins/cstman/skills/cstman/SKILL.md", skill_source),
-        (ROOT / "plugins/cstman/skills/ultracave/SKILL.md", ROOT / "skills/ultracave/SKILL.md"),
-        (ROOT / "plugins/cstman/skills/megacave/SKILL.md", ROOT / "skills/megacave/SKILL.md"),
-        (ROOT / "plugins/cstman/skills/cavecrew/SKILL.md", ROOT / "skills/cavecrew/SKILL.md"),
+        (ROOT / "plugins/cstman/skills/ultracst/SKILL.md", ROOT / "skills/ultracst/SKILL.md"),
+        (ROOT / "plugins/cstman/skills/megacst/SKILL.md", ROOT / "skills/megacst/SKILL.md"),
+        (ROOT / "plugins/cstman/skills/cstcrew/SKILL.md", ROOT / "skills/cstcrew/SKILL.md"),
         (
             ROOT / "plugins/cstman/skills/cstman-compress/SKILL.md",
             ROOT / "skills/cstman-compress/SKILL.md",
         ),
     ]
-    for agent in ("cavecrew-investigator", "cavecrew-builder", "cavecrew-reviewer"):
+    for agent in ("cstcrew-investigator", "cstcrew-builder", "cstcrew-reviewer"):
         skill_copies.append(
             (ROOT / f"plugins/cstman/agents/{agent}.md", ROOT / f"agents/{agent}.md")
         )
@@ -327,7 +327,7 @@ def verify_manifests_and_syntax() -> None:
     ensure(isinstance(claude_manifest, dict), "Claude plugin manifest must be an object")
     # An explicit `agents` array loads ZERO agents on Claude Code 2.1.235 —
     # `claude plugin details cstman` reports "Agents (0)" with the array and
-    # "Agents (3)" without it, so the cavecrew subagents the cavecrew skill
+    # "Agents (3)" without it, so the cstcrew subagents the cstcrew skill
     # delegates to simply did not exist for plugin users. The docs say
     # string|string[] is valid; the shipped loader disagrees, and a directory
     # string is rejected outright ("agents: Invalid input"). Rely on the
@@ -340,9 +340,9 @@ def verify_manifests_and_syntax() -> None:
     # Claude's default scan recurses through agents/: every markdown file there
     # becomes a user-visible subagent. Maintainer docs belong outside this tree.
     expected_agent_files = {
-        "cavecrew-builder.md",
-        "cavecrew-investigator.md",
-        "cavecrew-reviewer.md",
+        "cstcrew-builder.md",
+        "cstcrew-investigator.md",
+        "cstcrew-reviewer.md",
     }
     all_agent_md = {
         path.relative_to(ROOT / "agents").as_posix()
@@ -380,7 +380,7 @@ def verify_manifests_and_syntax() -> None:
         "cstman-stats.js",
         "cstman-statusline.sh",
         "cstman-statusline.ps1",
-        "cavecrew-model-overrides.js",
+        "cstcrew-model-overrides.js",
         "cstman-host-session-start.js",
     }
     manifest: dict[str, str] = {}
@@ -396,7 +396,7 @@ def verify_manifests_and_syntax() -> None:
     run(["node", "--check", "src/hooks/cstman-parse.js"])
     run(["node", "--check", "src/hooks/cstman-activate.js"])
     run(["node", "--check", "src/hooks/cstman-mode-tracker.js"])
-    run(["node", "--check", "src/hooks/cavecrew-model-overrides.js"])
+    run(["node", "--check", "src/hooks/cstcrew-model-overrides.js"])
     run(["node", "--check", "src/hooks/cstman-host-session-start.js"])
     run(["node", "--check", "installer/install.js"])
     run(["node", "--check", "installer/lib/settings.js"])
@@ -432,9 +432,9 @@ def verify_package_contents() -> None:
     required = {
         "installer/install.js",
         ".codex/codex-sessionstart.js",  # Codex always-on hook payload (#573)
-        "agents/cavecrew-investigator.md",
-        "agents/cavecrew-builder.md",
-        "agents/cavecrew-reviewer.md",
+        "agents/cstcrew-investigator.md",
+        "agents/cstcrew-builder.md",
+        "agents/cstcrew-reviewer.md",
         "skills/cstman-compress/scripts/compress.py",
         "src/hooks/cstman-parse.js",
         "src/hooks/cstman-statusline.sh",
@@ -825,8 +825,8 @@ def verify_hook_install_flow() -> None:
         )
         ensure("CSTMAN MODE ACTIVE" in activate_custom.stdout, "activation with custom default missing banner")
         ensure(
-            (claude_dir / ".cstman-active").read_text(encoding="utf-8") == "ultracave",
-            "CSTMAN_DEFAULT_MODE=ultra (legacy) should set flag to ultracave",
+            (claude_dir / ".cstman-active").read_text(encoding="utf-8") == "ultracst",
+            "CSTMAN_DEFAULT_MODE=ultra (legacy) should set flag to ultracst",
         )
         # Test "off" mode — activation skipped, flag removed
         activate_off = run(
@@ -864,15 +864,15 @@ def verify_hook_install_flow() -> None:
             env={**os.environ, **hook_env},
             text=True,
             encoding="utf-8",
-            input='{"prompt":"/ultracave"}',
+            input='{"prompt":"/ultracst"}',
             capture_output=True,
             check=True,
         )
         ensure(
-            "CSTMAN MODE ACTIVE (ultracave)" in ultra_prompt.stdout,
+            "CSTMAN MODE ACTIVE (ultracst)" in ultra_prompt.stdout,
             "mode tracker should emit active-mode reinforcement",
         )
-        ensure((claude_dir / ".cstman-active").read_text(encoding="utf-8") == "ultracave", "mode tracker did not record ultracave")
+        ensure((claude_dir / ".cstman-active").read_text(encoding="utf-8") == "ultracst", "mode tracker did not record ultracst")
 
         subprocess.run(
             ["node", "src/hooks/cstman-mode-tracker.js"],
@@ -891,7 +891,7 @@ def verify_hook_install_flow() -> None:
             [bash, "src/hooks/cstman-statusline.sh"],
             env=hook_env,
         )
-        ensure("[MEGACAVE]" in statusline.stdout, "statusline badge output mismatch (legacy wenyan-ultra → megacave)")
+        ensure("[MEGACST]" in statusline.stdout, "statusline badge output mismatch (legacy wenyan-ultra → megacst)")
 
         reinstall = run([bash, "src/hooks/install.sh"], env=hook_env)
         ensure("Nothing to do" in reinstall.stdout, "install.sh should be idempotent")

@@ -24,7 +24,7 @@ What it does:
 
 - Auto-detects every supported agent installed on your machine (Claude Code, Cursor, Codex, etc.).
 - For each one, runs that agent's native install path (plugin / extension / rule file / `npx skills add`).
-- Installs Cavecrew investigator, builder, and reviewer presets where the host supports native subagents.
+- Installs CST Crew investigator, builder, and reviewer presets where the host supports native subagents.
 - Wires Claude Code hooks and statusline badge on top, plus a Codex start-of-session hook so Codex talks cstman without asking. (`cstman-shrink` MCP middleware is opt-in via `--with-mcp-shrink` — see flag table below.)
 - Skips anything you don't have. Safe to re-run. ~30 seconds end-to-end.
 
@@ -123,7 +123,7 @@ Already inside a Claude Code session? The same Claude Code install as slash comm
 
 For "auto-activates? No" agents, invoke the CSTMAN skill using the host's skill menu, `/cstman` where supported (`$cstman` in Codex), or a prompt naming the skill. Enable skills first if your host requires it: Augment has a Skills beta setting; AiderDesk requires Skills Tools in the active agent profile; custom Kiro agents need skill resources.
 
-**Pick the mode new sessions start in.** Put `{"defaultMode": "ultracave"}` (or `"cstman"`, `"megacave"`, `"off"`) in `~/.config/cstman/config.json`, or in a `.cstman.json` at a project root for just that project.
+**Pick the mode new sessions start in.** Put `{"defaultMode": "ultracst"}` (or `"cstman"`, `"megacst"`, `"off"`) in `~/.config/cstman/config.json`, or in a `.cstman.json` at a project root for just that project.
 
 Scripted Claude Code runs (`claude -p` and the Agent SDK) start with cstman off whatever that file says, so tools that read Claude's reply get plain text. Type `/cstman` in the prompt, or set `CSTMAN_DEFAULT_MODE=cstman` (or another mode) in their environment, to turn it on.
 
@@ -131,7 +131,7 @@ Scripted Claude Code runs (`claude -p` and the Agent SDK) start with cstman off 
 
 **Subagents.** Some agents hand parts of a job to helper agents ("subagents"). Whether the helpers talk cstman depends on the host:
 
-- **Claude Code**: yes. Each subagent starts in the mode of the window that spawned it. Say "stop cstman" and new subagents start normal too. Cavecrew agents keep their own cstman voice.
+- **Claude Code**: yes. Each subagent starts in the mode of the window that spawned it. Say "stop cstman" and new subagents start normal too. CST Crew agents keep their own cstman voice.
 - **opencode**: subagents get the always-on cstman rules from `AGENTS.md` (checked on opencode 2.0.22). Those rules are fixed text, so "stop cstman" does not switch them off for subagents.
 - **Hermes Agent**: not verified. If a delegated task comes back wordy, ask for the cstman skill in that task.
 
@@ -174,9 +174,9 @@ for install and uninstall.
 ### Oh My Pi (OMP)
 
 With `omp` on your PATH, run `node installer/install.js --only omp` from this clone,
-then restart OMP. The native plugin adds nine skills, eight commands, Cavecrew
+then restart OMP. The native plugin adds nine skills, eight commands, CST Crew
 presets, a CSTMAN badge, and CSTMAN instructions on each agent turn. Commands
-such as `/ultracave` and `stop cstman` instruct the model; the badge indicates
+such as `/ultracst` and `stop cstman` instruct the model; the badge indicates
 that the plugin is loaded. Host lifecycle and prompt delivery were checked with
 OMP 18.2.6. This integration does not read Claude Code session statistics.
 
@@ -196,14 +196,14 @@ rerun the install, or uninstall. Failed deregistration retains those files too.
 Two ways in. Pick one: with both, every chat gets the rules twice.
 
 - **Installer.** `npx -y github:JuliusBrussee/cstman -- --only cursor` adds
-  the skills, the Cavecrew agents (`~/.cursor/agents/`) and a session hook
+  the skills, the CST Crew agents (`~/.cursor/agents/`) and a session hook
   (`~/.cursor/hooks.json` plus `~/.cursor/cstman/`). The Cursor editor, the
   Agents Window and `cursor-agent` all read these. `--no-hooks` installs the
   agents without the hook; it does not remove a hook an earlier install
   added (`--uninstall` does). `--uninstall` removes only cstman's entry from
   `hooks.json`; your other hooks stay.
 - **Plugin.** This repo is a Cursor plugin (`.cursor-plugin/plugin.json`: the
-  skills, the same session hook, and the Cavecrew agents as-is from `agents/`).
+  skills, the same session hook, and the CST Crew agents as-is from `agents/`).
   Cursor skips their Claude-only model pin and runs them on your chat model;
   the installer's copies also mark two of them read-only. Clone it into
   `~/.cursor/plugins/local/cstman`, then run **Developer: Reload Window**. For
@@ -468,13 +468,13 @@ What it removes:
 
 - Native agent routing written by `cstman setup --install` / `cstman enable <agent>` — for Claude Code that is `ANTHROPIC_BASE_URL` and `_CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL` in `~/.claude/settings.json`, which is what makes [Claude Code Remote Control](docs/technical/agent-wrapping.md) unavailable while CSTMAN is routing. Restored from each agent's integration journal, so your own prior value comes back. CSTMAN never takes that route over from an endpoint of your own in the first place: if `ANTHROPIC_BASE_URL` already points somewhere that is not CSTMAN (DeepSeek, Z.ai, a corporate relay), `cstman enable claude` leaves Claude Code as is and says why. To route it through CSTMAN anyway, remove `ANTHROPIC_BASE_URL` and run `cstman enable claude` again.
 - CSTMAN hook entries from `$CLAUDE_CONFIG_DIR/settings.json` (default `~/.claude/`; matched by the substring `cstman`).
-- Hook files in `$CLAUDE_CONFIG_DIR/hooks/` (`cstman-activate.js`, `cstman-mode-tracker.js`, `cstman-parse.js`, `cstman-stats.js`, `cstman-config.js`, `cavecrew-model-overrides.js`, `cstman-statusline.{sh,ps1}`, plus the dir's `package.json` marker).
+- Hook files in `$CLAUDE_CONFIG_DIR/hooks/` (`cstman-activate.js`, `cstman-mode-tracker.js`, `cstman-parse.js`, `cstman-stats.js`, `cstman-config.js`, `cstcrew-model-overrides.js`, `cstman-statusline.{sh,ps1}`, plus the dir's `package.json` marker).
 - The Claude Code plugin and the Gemini CLI extension (if installed).
 - The opencode native plugin (`$OPENCODE_CONFIG_DIR/plugins/cstman/`, default `~/.config/opencode/plugins/cstman/`, the `plugin` and `mcp.cstman-shrink` entries from `opencode.json`, our skill/agent/command files, the cstman block from `AGENTS.md`, and the opencode flag file).
 - The Codex SessionStart entry from `$CODEX_HOME/hooks.json` (default `~/.codex/`; other hooks, including the cstman CLI's own, stay) and the hook files under `$CODEX_HOME/cstman/`. The file goes away only if cstman's entry was all it held.
 - The Oh My Pi plugin (`omp plugin uninstall cstman`) and CSTMAN's managed OMP plugin package at `~/.omp/cstman-plugin/`.
 - The Antigravity CLI plugin (`agy plugin uninstall cstman`).
-- Cursor: the Cavecrew agents in `~/.cursor/agents/`, `~/.cursor/cstman/`, and cstman's entry in `~/.cursor/hooks.json`.
+- Cursor: the CST Crew agents in `~/.cursor/agents/`, `~/.cursor/cstman/`, and cstman's entry in `~/.cursor/hooks.json`.
 - The Copilot CLI session hook: `$COPILOT_HOME/hooks/cstman.json` and `$COPILOT_HOME/cstman/` (default `~/.copilot/`).
 - The OpenClaw workspace skill folder and the marker-fenced block from `~/.openclaw/workspace/SOUL.md` (when present).
 - Owned native skill copies (Continue, AiderDesk, Antigravity, Grok Build, and iFlow/Crush with a custom home) and the marker-fenced block from `$GROK_HOME/AGENTS.md` (default `~/.grok/AGENTS.md`). Your own text in that file stays.
@@ -552,7 +552,7 @@ The installer uses a JSONC-tolerant parser (`installer/lib/settings.js`) so comm
 Use the rule-file-only path. Static rule files need no hook:
 
 ```bash
-# Skills for one agent, no hooks (still writes that agent's skills, and for Cursor the Cavecrew agents, in your home folder)
+# Skills for one agent, no hooks (still writes that agent's skills, and for Cursor the CST Crew agents, in your home folder)
 node installer/install.js --only cursor --no-hooks
 
 # Or write rule files into the current repo only (no global state), one agent per run

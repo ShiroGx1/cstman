@@ -194,7 +194,7 @@ test('other modes (legacy "ultra" flag) also leave savings unknown', (tmp) => {
     encoding: 'utf8',
     env: { ...process.env, CLAUDE_CONFIG_DIR: claudeDir },
   });
-  assert.match(out, /Mode: ultracave\b/);
+  assert.match(out, /Mode: ultracst\b/);
   assertSavingsUnknown(out);
 });
 
@@ -379,7 +379,7 @@ test('--record appends a SessionEnd snapshot silently, with this session\'s own 
   ]);
   const claudeDir = path.join(tmp, '.claude');
   fs.mkdirSync(path.join(claudeDir, '.cstman-sessions'), { recursive: true });
-  fs.writeFileSync(path.join(claudeDir, '.cstman-sessions', `${SESSION_END_SESSION_ID}.mode`), 'ultracave');
+  fs.writeFileSync(path.join(claudeDir, '.cstman-sessions', `${SESSION_END_SESSION_ID}.mode`), 'ultracst');
   fs.writeFileSync(path.join(claudeDir, '.cstman-active'), 'cstman'); // another window's last write
   const r = runRecord(claudeDir, JSON.stringify({ session_id: SESSION_END_SESSION_ID, transcript_path: sess, reason: 'other' }));
   assert.strictEqual(r.status, 0, r.stderr);
@@ -393,7 +393,7 @@ test('--record appends a SessionEnd snapshot silently, with this session\'s own 
   assert.strictEqual(entry.output_tokens, 350);
   assert.strictEqual(entry.cache_read_input_tokens, 40);
   assert.strictEqual(entry.turns, 1);
-  assert.strictEqual(entry.mode, 'ultracave');
+  assert.strictEqual(entry.mode, 'ultracst');
   for (const key of Object.keys(entry)) assert.doesNotMatch(key, /saved|savings|usd/i, `no savings field: ${key}`);
 
   // The lifetime view now counts the session without anyone typing /cstman-stats.
@@ -655,7 +655,7 @@ test('PowerShell keeps session badges and ignores old savings before stats runs'
   const claudeDir = path.join(tmp, '.claude');
   fs.mkdirSync(claudeDir, { recursive: true });
   fs.writeFileSync(path.join(claudeDir, '.cstman-active'), 'full');
-  seedSessions(claudeDir, { session: 'ultracave' });
+  seedSessions(claudeDir, { session: 'ultracst' });
   const suffixPath = path.join(claudeDir, '.cstman-statusline-suffix');
   fs.writeFileSync(suffixPath, '⛏ 1.9k');
   const command = process.platform === 'win32' ? 'powershell' : 'pwsh';
@@ -676,7 +676,7 @@ test('PowerShell keeps session badges and ignores old savings before stats runs'
       }
       throw e;
     }
-    assert.match(out, /\[ULTRACAVE\]/);
+    assert.match(out, /\[ULTRACST\]/);
     assert.doesNotMatch(out, /⛏|1\.9k/);
   }
   assert.strictEqual(fs.readFileSync(suffixPath, 'utf8'), '⛏ 1.9k');
@@ -709,10 +709,10 @@ test('statusline.sh renders the session mode, not the shared flag', (tmp) => {
   const claudeDir = path.join(tmp, '.claude');
   fs.mkdirSync(claudeDir, { recursive: true });
   fs.writeFileSync(path.join(claudeDir, '.cstman-active'), 'full');
-  seedSessions(claudeDir, { sessA: 'ultracave', sessB: 'megacave' });
+  seedSessions(claudeDir, { sessA: 'ultracst', sessB: 'megacst' });
 
-  assert.match(statusline(claudeDir, '{"session_id":"sessA"}'), /\[ULTRACAVE\]/);
-  assert.match(statusline(claudeDir, '{"session_id":"sessB"}'), /\[MEGACAVE\]/);
+  assert.match(statusline(claudeDir, '{"session_id":"sessA"}'), /\[ULTRACST\]/);
+  assert.match(statusline(claudeDir, '{"session_id":"sessB"}'), /\[MEGACST\]/);
 });
 
 test('statusline.sh badge for every mode id and every legacy level name', (tmp) => {
@@ -720,10 +720,10 @@ test('statusline.sh badge for every mode id and every legacy level name', (tmp) 
   const claudeDir = path.join(tmp, '.claude');
   fs.mkdirSync(claudeDir, { recursive: true });
   const badges = {
-    cstman: '[CSTMAN]', ultracave: '[ULTRACAVE]', megacave: '[MEGACAVE]',
+    cstman: '[CSTMAN]', ultracst: '[ULTRACST]', megacst: '[MEGACST]',
     commit: '[CSTMAN:COMMIT]', review: '[CSTMAN:REVIEW]', compress: '[CSTMAN:COMPRESS]',
-    lite: '[CSTMAN]', full: '[CSTMAN]', ultra: '[ULTRACAVE]', wenyan: '[MEGACAVE]',
-    'wenyan-lite': '[MEGACAVE]', 'wenyan-full': '[MEGACAVE]', 'wenyan-ultra': '[MEGACAVE]',
+    lite: '[CSTMAN]', full: '[CSTMAN]', ultra: '[ULTRACST]', wenyan: '[MEGACST]',
+    'wenyan-lite': '[MEGACST]', 'wenyan-full': '[MEGACST]', 'wenyan-ultra': '[MEGACST]',
   };
   for (const [mode, badge] of Object.entries(badges)) {
     seedSessions(claudeDir, { s: mode });
@@ -753,7 +753,7 @@ test('statusline.sh falls back to the legacy flag without a usable session id', 
   const claudeDir = path.join(tmp, '.claude');
   fs.mkdirSync(claudeDir, { recursive: true });
   fs.writeFileSync(path.join(claudeDir, '.cstman-active'), 'wenyan');
-  seedSessions(claudeDir, { sessA: 'ultracave' });
+  seedSessions(claudeDir, { sessA: 'ultracst' });
 
   for (const stdin of [
     '{"session_id":"unknown-session"}',   // valid id, no state file yet
@@ -762,7 +762,7 @@ test('statusline.sh falls back to the legacy flag without a usable session id', 
     'not json at all',
     '',                                   // no payload
   ]) {
-    assert.match(statusline(claudeDir, stdin), /\[MEGACAVE\]/, `stdin: ${stdin}`);
+    assert.match(statusline(claudeDir, stdin), /\[MEGACST\]/, `stdin: ${stdin}`);
   }
 });
 
@@ -785,10 +785,10 @@ test('statusline.sh tolerates multiline and whitespace-padded JSON', (tmp) => {
   const claudeDir = path.join(tmp, '.claude');
   fs.mkdirSync(claudeDir, { recursive: true });
   fs.writeFileSync(path.join(claudeDir, '.cstman-active'), 'full');
-  seedSessions(claudeDir, { sessA: 'ultracave' });
+  seedSessions(claudeDir, { sessA: 'ultracst' });
 
   const pretty = '{\n  "model": { "id": "x" },\n  "session_id" : "sessA"\n}\n';
-  assert.match(statusline(claudeDir, pretty), /\[ULTRACAVE\]/);
+  assert.match(statusline(claudeDir, pretty), /\[ULTRACST\]/);
 });
 
 test('appendFlag is symlink-safe (refuses symlinked target)', (tmp) => {
@@ -975,14 +975,14 @@ test('mixed and unattributed output stays observed usage in reports, shares and 
     } else {
       assert.match(out, /Output tokens:\s+1,250/);
       assert.match(out, /cstman:\s+1,000 tokens/);
-      assert.match(out, /ultracave:\s+200 tokens/);
+      assert.match(out, /ultracst:\s+200 tokens/);
       assert.match(out, /unattributed:\s+50 tokens \(mode unknown\)/);
     }
   }
   const rows = fs.readFileSync(path.join(claudeDir, '.cstman-history.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
   for (const row of rows) {
     assert.strictEqual(row.output_tokens, 1250);
-    assert.deepStrictEqual(row.output_tokens_by_mode, { cstman: 1000, ultracave: 200 });
+    assert.deepStrictEqual(row.output_tokens_by_mode, { cstman: 1000, ultracst: 200 });
     assert.strictEqual(row.unattributed_output_tokens, 50);
     assert.strictEqual(row.mode_attribution, 'log');
     assert.ok(!Object.hasOwn(row, 'est_saved_tokens'));
@@ -1003,16 +1003,16 @@ test('mode tracker logs timestamped transitions, deduping unchanged modes (#601)
   const rows = () => fs.readFileSync(logPath, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l));
 
   run('/cstman ultra');
-  run('/ultracave'); // same mode under its own command — must not append a duplicate row
+  run('/ultracst'); // same mode under its own command — must not append a duplicate row
   assert.strictEqual(rows().length, 1);
-  assert.strictEqual(rows()[0].mode, 'ultracave');
+  assert.strictEqual(rows()[0].mode, 'ultracst');
   assert.strictEqual(rows()[0].prev, 'cstman', 'legacy "full" flag logs as cstman');
   assert.ok(Number.isFinite(rows()[0].ts));
 
   run('/cstman off'); // deactivation is a transition too
   assert.strictEqual(rows().length, 2);
   assert.strictEqual(rows()[1].mode, null);
-  assert.strictEqual(rows()[1].prev, 'ultracave');
+  assert.strictEqual(rows()[1].prev, 'ultracst');
 });
 
 test('excludes tokens that predate a mid-session flag write with no log (#601)', (tmp) => {
@@ -1108,7 +1108,7 @@ test('unattributed output remains counted with unknown mode and savings', (tmp) 
   assert.doesNotMatch(out, /Est\. net:/); // no attributed savings basis → no net claim
 });
 
-test('ultracave mode also has no measured net result', (tmp) => {
+test('ultracst mode also has no measured net result', (tmp) => {
   const sess = makeSession(tmp, [
     { type: 'assistant', message: { usage: { output_tokens: 100 } } },
   ]);
@@ -1118,7 +1118,7 @@ test('ultracave mode also has no measured net result', (tmp) => {
     encoding: 'utf8',
     env: { ...process.env, CLAUDE_CONFIG_DIR: claudeDir },
   });
-  assert.match(out, /Mode: ultracave\b/);
+  assert.match(out, /Mode: ultracst\b/);
   assertSavingsUnknown(out);
   assert.doesNotMatch(out, /Est\. net:/);
 });

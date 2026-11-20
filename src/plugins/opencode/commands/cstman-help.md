@@ -6,8 +6,8 @@ Show the cstman quick-reference card.
 | Command | What |
 |---|---|
 | `/cstman` | CSTMAN voice, default |
-| `/ultracave` | Maximum compression |
-| `/megacave` | Classical Chinese (文言文) |
+| `/ultracst` | Maximum compression |
+| `/megacst` | Classical Chinese (文言文) |
 | `/cstman off` | Deactivate |
 | `/cstman-commit` | Terse commit message |
 | `/cstman-review` | One-line review findings |

@@ -42,7 +42,7 @@ Environment:
                        snapshots/fidelity.json for score_fidelity.py
                        (English control only)
   CSTMAN_EVAL_SKILLS  optional comma-separated skill ids (e.g.
-                       cstman,ultracave,megacave) restricting the skill arms;
+                       cstman,ultracst,megacst) restricting the skill arms;
                        default runs every skills/*/SKILL.md. Unknown ids abort.
   CSTMAN_EVAL_TIMEOUT seconds before one claude call is abandoned (default
                        300). A failed or timed-out call is retried twice

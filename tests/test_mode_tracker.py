@@ -85,7 +85,7 @@ class ModeTrackerTests(unittest.TestCase):
             deadline = time.time() + 5
             while time.time() < deadline and self.flag_value() is None:
                 time.sleep(0.05)
-            self.assertEqual(self.flag_value(), "ultracave")
+            self.assertEqual(self.flag_value(), "ultracst")
         finally:
             try:
                 proc.stdin.close()
@@ -176,8 +176,8 @@ class ModeTrackerTests(unittest.TestCase):
 
     def test_slash_mode_commands(self):
         for prompt, mode in [
-            ("/ultracave", "ultracave"), ("/cstman:megacave", "megacave"),
-            ("/cstman ultra", "ultracave"), ("/cstman wenyan-lite", "megacave"),
+            ("/ultracst", "ultracst"), ("/cstman:megacst", "megacst"),
+            ("/cstman ultra", "ultracst"), ("/cstman wenyan-lite", "megacst"),
             ("/cstman lite", "cstman"), ("/cstman", "cstman"),
         ]:
             with self.subTest(prompt=prompt):
@@ -192,7 +192,7 @@ class ModeTrackerTests(unittest.TestCase):
     # ── #856: read-only mode status ──────────────────────────────────────
 
     def test_status_reports_active_mode_without_mutating_state(self):
-        self.flag.write_text("ultracave", encoding="utf-8")
+        self.flag.write_text("ultracst", encoding="utf-8")
         before = self.flag.read_text(encoding="utf-8")
 
         result = self.send("/cstman status")
@@ -200,7 +200,7 @@ class ModeTrackerTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual(
             payload["hookSpecificOutput"]["additionalContext"],
-            "Report this status verbatim without changing mode: CSTMAN mode: ultracave",
+            "Report this status verbatim without changing mode: CSTMAN mode: ultracst",
         )
         self.assertEqual(self.flag_value(), before)
         self.assertFalse(
@@ -216,7 +216,7 @@ class ModeTrackerTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual(
             payload["hookSpecificOutput"]["additionalContext"],
-            "Report this status verbatim without changing mode: CSTMAN mode: megacave",
+            "Report this status verbatim without changing mode: CSTMAN mode: megacst",
         )
         self.assertEqual(self.flag_value(), "wenyan", "status must not rewrite the file")
 
@@ -295,8 +295,8 @@ class ModeTrackerTests(unittest.TestCase):
         self.send("/cstman-commit")
         self.assertEqual(self.flag_value(), "commit")
         r = self.send("ordinary follow-up question")
-        self.assertEqual(self.flag_value(), "ultracave")
-        self.assertIn("CSTMAN MODE ACTIVE (ultracave)", r.stdout)
+        self.assertEqual(self.flag_value(), "ultracst")
+        self.assertIn("CSTMAN MODE ACTIVE (ultracst)", r.stdout)
 
     def test_commit_with_no_prior_mode_deactivates_after(self):
         self.send("/cstman-commit")
@@ -311,7 +311,7 @@ class ModeTrackerTests(unittest.TestCase):
         self.send("/cstman-review")
         self.assertEqual(self.flag_value(), "review")
         self.send("ordinary follow-up question")
-        self.assertEqual(self.flag_value(), "megacave")
+        self.assertEqual(self.flag_value(), "megacst")
 
     def test_namespaced_commit_and_review_recognized(self):
         # Pre-fix: only compress and stats had the /cstman:cstman- variant.
@@ -380,25 +380,25 @@ class SessionScopedModeTests(unittest.TestCase):
         return self.legacy.read_text(encoding="utf-8") if self.legacy.exists() else None
 
     def test_parallel_sessions_keep_separate_modes(self):
-        self.send("/ultracave", "sessA")
-        self.send("/megacave", "sessB")
-        self.assertEqual(self.mode_of("sessA"), "ultracave")
-        self.assertEqual(self.mode_of("sessB"), "megacave")
+        self.send("/ultracst", "sessA")
+        self.send("/megacst", "sessB")
+        self.assertEqual(self.mode_of("sessA"), "ultracst")
+        self.assertEqual(self.mode_of("sessB"), "megacst")
 
     def test_status_uses_session_mode_before_legacy_fallback(self):
-        self.send("/ultracave", "sessA")
-        self.send("/megacave", "sessB")
+        self.send("/ultracst", "sessA")
+        self.send("/megacst", "sessB")
 
         status_a = json.loads(self.send("/cstman status", "sessA").stdout)
         status_b = json.loads(self.send("/cstman status", "sessB").stdout)
 
         self.assertEqual(
             status_a["hookSpecificOutput"]["additionalContext"],
-            "Report this status verbatim without changing mode: CSTMAN mode: ultracave",
+            "Report this status verbatim without changing mode: CSTMAN mode: ultracst",
         )
         self.assertEqual(
             status_b["hookSpecificOutput"]["additionalContext"],
-            "Report this status verbatim without changing mode: CSTMAN mode: megacave",
+            "Report this status verbatim without changing mode: CSTMAN mode: megacst",
         )
 
     def test_status_preserves_session_off_and_all_state_bytes(self):
@@ -414,17 +414,17 @@ class SessionScopedModeTests(unittest.TestCase):
             self.assertIn('CSTMAN mode: ' + expected, response.stdout)
             self.assertEqual(snapshot(), before)
         self.send('continue', 'sessB')
-        self.assertEqual(self.mode_of('sessB'), 'ultracave')
+        self.assertEqual(self.mode_of('sessB'), 'ultracst')
 
     def test_reinforcement_reflects_own_session(self):
-        self.send("/ultracave", "sessA")
-        self.send("/megacave", "sessB")
+        self.send("/ultracst", "sessA")
+        self.send("/megacst", "sessB")
         r = self.send("ordinary prompt", "sessA")
-        self.assertIn("CSTMAN MODE ACTIVE (ultracave)", r.stdout)
-        self.assertNotIn("megacave", r.stdout)
+        self.assertIn("CSTMAN MODE ACTIVE (ultracst)", r.stdout)
+        self.assertNotIn("megacst", r.stdout)
 
     def test_deactivating_one_session_leaves_the_other_active(self):
-        self.send("/ultracave", "sessA")
+        self.send("/ultracst", "sessA")
         self.send("/cstman", "sessB")
         self.send("stop cstman", "sessB")
 
@@ -433,7 +433,7 @@ class SessionScopedModeTests(unittest.TestCase):
         self.assertNotIn("CSTMAN MODE ACTIVE", r.stdout)
 
         r = self.send("ordinary prompt", "sessA")
-        self.assertIn("CSTMAN MODE ACTIVE (ultracave)", r.stdout)
+        self.assertIn("CSTMAN MODE ACTIVE (ultracst)", r.stdout)
 
     def test_legacy_mirror_never_holds_literal_off(self):
         # An older statusline or hook reading the legacy path must see absence,
@@ -445,25 +445,25 @@ class SessionScopedModeTests(unittest.TestCase):
         self.assertIsNone(self.legacy_value())
 
     def test_legacy_mirror_tracks_last_write(self):
-        self.send("/ultracave", "sessA")
-        self.send("/megacave", "sessB")
-        self.assertEqual(self.legacy_value(), "megacave")
+        self.send("/ultracst", "sessA")
+        self.send("/megacst", "sessB")
+        self.assertEqual(self.legacy_value(), "megacst")
 
     def test_prev_restore_is_session_scoped(self):
         # Each window runs a one-shot skill; each must return to its own mode.
-        self.send("/ultracave", "sessA")
-        self.send("/megacave", "sessB")
+        self.send("/ultracst", "sessA")
+        self.send("/megacst", "sessB")
         self.send("/cstman-commit", "sessA")
         self.send("/cstman-commit", "sessB")
 
         self.send("follow-up", "sessA")
-        self.assertEqual(self.mode_of("sessA"), "ultracave")
+        self.assertEqual(self.mode_of("sessA"), "ultracst")
         self.send("follow-up", "sessB")
-        self.assertEqual(self.mode_of("sessB"), "megacave")
+        self.assertEqual(self.mode_of("sessB"), "megacst")
 
     def test_malformed_session_id_falls_back_to_legacy(self):
-        self.send("/ultracave", "../../escape")
-        self.assertEqual(self.legacy_value(), "ultracave", "must degrade, not fail")
+        self.send("/ultracst", "../../escape")
+        self.assertEqual(self.legacy_value(), "ultracst", "must degrade, not fail")
         self.assertFalse(
             self.sessions.exists() and any(self.sessions.iterdir()),
             "no state file may be created for a rejected session id",
@@ -471,7 +471,7 @@ class SessionScopedModeTests(unittest.TestCase):
 
     def test_session_id_cannot_escape_the_sessions_directory(self):
         for bad in ["../../evil", "a/b", "..", "x" * 200]:
-            self.send("/ultracave", bad)
+            self.send("/ultracst", bad)
         stray = list(self.claude_dir.rglob("*evil*")) + list(self.claude_dir.rglob("*.mode"))
         self.assertEqual(stray, [], f"unexpected files written: {stray}")
 
@@ -497,14 +497,14 @@ class SessionScopedModeTests(unittest.TestCase):
         # holding a pre-three-skill level name.
         self.legacy.write_text("wenyan", encoding="utf-8")
         r = self.send("ordinary prompt", "sessA")
-        self.assertIn("CSTMAN MODE ACTIVE (megacave)", r.stdout)
+        self.assertIn("CSTMAN MODE ACTIVE (megacst)", r.stdout)
 
     def test_legacy_session_file_resolves_to_its_skill(self):
         self.sessions.mkdir(parents=True)
         (self.sessions / "sessA.mode").write_text("wenyan-lite", encoding="utf-8")
         self.legacy.write_text("lite", encoding="utf-8")
         r = self.send("ordinary prompt", "sessA")
-        self.assertIn("CSTMAN MODE ACTIVE (megacave)", r.stdout)
+        self.assertIn("CSTMAN MODE ACTIVE (megacst)", r.stdout)
         r = self.send("ordinary prompt", "sessNoState")
         self.assertIn("CSTMAN MODE ACTIVE (cstman)", r.stdout, "mirror 'lite' reads as cstman")
 

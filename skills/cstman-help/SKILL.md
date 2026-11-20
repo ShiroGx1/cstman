@@ -14,8 +14,8 @@ Display this reference card when invoked. One-shot — do NOT change mode, write
 | Mode | Trigger | What change |
 |------|---------|-------------|
 | **cstman** | `/cstman` | The voice. Answer first, no fluff, every fact kept. Default. |
-| **ultracave** | `/ultracave` (alias `/cstman ultra`) | Grammar stripped. Fragments, one word when enough, each fact once. |
-| **megacave** | `/megacave` (alias `/cstman wenyan`) | Classical Chinese 文言文. Far fewer characters, technical terms verbatim. |
+| **ultracst** | `/ultracst` (alias `/cstman ultra`) | Grammar stripped. Fragments, one word when enough, each fact once. |
+| **megacst** | `/megacst` (alias `/cstman wenyan`) | Classical Chinese 文言文. Far fewer characters, technical terms verbatim. |
 
 Mode stick until changed or session end.
 `/cstman status` reports current mode without changing it. Claude Code and the standalone OpenCode plugin read stored state; other hosts answer from the conversation and mark it `(not tracked by this host)`.
@@ -43,12 +43,12 @@ Default mode = `cstman`. Change it:
 
 **Environment variable** (highest priority):
 ```bash
-export CSTMAN_DEFAULT_MODE=ultracave
+export CSTMAN_DEFAULT_MODE=ultracst
 ```
 
 **Config file** (`~/.config/cstman/config.json`):
 ```json
-{ "defaultMode": "ultracave" }
+{ "defaultMode": "ultracst" }
 ```
 
 For opt-in activation in Claude Code, set `defaultMode` to `manual`. Sessions start off; `/cstman` or `talk like cstman` activates cstman. `off` also disables bare-command activation. `manual` is a startup policy, not a mode. OpenCode still starts in cstman mode because its installer also supplies static activation rules.

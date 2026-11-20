@@ -73,17 +73,17 @@ class BenchmarkContractTests(unittest.TestCase):
                 manifest = (ROOT / ".claude-plugin" / name).read_text(encoding="utf-8")
                 self.assertNotIn("65%", manifest)
 
-    def test_docs_drop_unreproducible_compress_and_cavecrew_figures(self):
+    def test_docs_drop_unreproducible_compress_and_cstcrew_figures(self):
         # benchmark.py over tests/cstman-compress gives 33.2% total; 46% never
-        # matched the fixtures, and no benchmark backs the cavecrew figures.
+        # matched the fixtures, and no benchmark backs the cstcrew figures.
         banned = {
             "README.md": ["46% smaller"],
             "docs/HONEST-NUMBERS.md": ["~46%"],
             "skills/cstman-help/SKILL.md": ["~46%"],
             "skills/cstman-compress/README.md": ["46%", "59.6%"],
-            "skills/cavecrew/SKILL.md": ["~700 tokens"],
-            "agents/cavecrew-investigator.md": ["60% fewer"],
-            "plugins/cstman/agents/cavecrew-investigator.md": ["60% fewer"],
+            "skills/cstcrew/SKILL.md": ["~700 tokens"],
+            "agents/cstcrew-investigator.md": ["60% fewer"],
+            "plugins/cstman/agents/cstcrew-investigator.md": ["60% fewer"],
         }
         for rel, needles in banned.items():
             text = (ROOT / rel).read_text(encoding="utf-8")

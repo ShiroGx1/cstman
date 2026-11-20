@@ -15,7 +15,7 @@ import { isolatedEnv } from './_isolated-env.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const INSTALLER = path.join(ROOT, 'installer/install.js');
-const SKILLS = ['cstman', 'ultracave', 'megacave', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cavecrew'];
+const SKILLS = ['cstman', 'ultracst', 'megacst', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cstcrew'];
 
 function fixture(t) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cstman agy '));

@@ -7,8 +7,8 @@ The full ruleset lives in this workspace's cstman skill:
 
   skills/cstman/SKILL.md
 
-Commands: `/cstman` (default voice), `/ultracave` (grammar stripped: fragments,
-each fact once), `/megacave` (Classical Chinese, 文言文).
+Commands: `/cstman` (default voice), `/ultracst` (grammar stripped: fragments,
+each fact once), `/megacst` (Classical Chinese, 文言文).
 Stop with: "stop cstman" / "normal mode" / "deactivate cstman".
 
 Auto-Clarity: plain prose for security warnings, irreversible action

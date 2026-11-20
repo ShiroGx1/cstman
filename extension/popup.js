@@ -44,8 +44,8 @@ buildFlame(document.getElementById("flame"));
 // ── settings wiring ──────────────────────────────────────────────────────
 const HINTS = {
   cstman: "Answer first, fluff gone, every technical fact kept.",
-  ultracave: "Grammar stripped. Fragments, each fact once.",
-  megacave: "Classical Chinese (文言文). Code stays verbatim.",
+  ultracst: "Grammar stripped. Fragments, each fact once.",
+  megacst: "Classical Chinese (文言文). Code stays verbatim.",
 };
 
 function load() {

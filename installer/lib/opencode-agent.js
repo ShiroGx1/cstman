@@ -5,12 +5,12 @@
 //
 // 1. `tools:` as a YAML array (`tools: [Read, Grep, Bash]`):
 //
-//      Configuration is invalid at .../agents/cavecrew-reviewer.md
+//      Configuration is invalid at .../agents/cstcrew-reviewer.md
 //      ↳ Expected object | undefined, got ["Read","Grep","Bash"] tools
 //
 //    opencode allows `tools` to be a map (`{read: true, grep: true}`) or
 //    omitted entirely. Omitting falls back to opencode's default tool set,
-//    which is what the cavecrew subagent prompts already self-restrict against
+//    which is what the cstcrew subagent prompts already self-restrict against
 //    in their body ("Read-only locator", "No `Bash` available", etc.), so
 //    dropping the array form is safe.
 //
@@ -38,7 +38,7 @@
 //
 // 3. `{ subagent: true }` adds `mode: subagent` when no `mode:` is set (#725).
 //    opencode defaults `mode` to `all`, and Tab cycles every primary-capable
-//    agent, so the cavecrew helpers crowded the Tab rotation. Subagent mode
+//    agent, so the cstcrew helpers crowded the Tab rotation. Subagent mode
 //    keeps them @-mentionable and Task-callable. Opt-in so OMP bytes stay put.
 
 const TOOLS_FIELD_RE = /^tools[ \t]*:/;

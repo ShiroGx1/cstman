@@ -65,21 +65,21 @@ check "resume stays off"          "OK"  "$OUT"
 echo
 echo "4. A second window is independent"
 activate '{"session_id":"sess-B","source":"startup"}' > /dev/null
-prompt '{"session_id":"sess-B","prompt":"/ultracave"}' > /dev/null
+prompt '{"session_id":"sess-B","prompt":"/ultracst"}' > /dev/null
 check "sess-A untouched"          "off"       "$(mode_of sess-A)"
-check "sess-B is ultracave"       "ultracave" "$(mode_of sess-B)"
+check "sess-B is ultracst"       "ultracst" "$(mode_of sess-B)"
 
 echo
 echo "5. The statusline badge shows each window its own mode"
 check "sess-A renders nothing"    ""                 "$(badge '{"session_id":"sess-A"}')"
-check "sess-B renders ultracave"  "[ULTRACAVE]"      "$(badge '{"session_id":"sess-B"}')"
+check "sess-B renders ultracst"  "[ULTRACST]"      "$(badge '{"session_id":"sess-B"}')"
 
 echo
 echo "6. Per-turn reinforcement follows the session, not the machine"
 check "sess-A gets none"          "" "$(prompt '{"session_id":"sess-A","prompt":"hi"}')"
 case "$(prompt '{"session_id":"sess-B","prompt":"hi"}')" in
-  *'CSTMAN MODE ACTIVE (ultracave)'*) check "sess-B reinforced as ultracave" "yes" "yes" ;;
-  *)                                   check "sess-B reinforced as ultracave" "yes" "no"  ;;
+  *'CSTMAN MODE ACTIVE (ultracst)'*) check "sess-B reinforced as ultracst" "yes" "yes" ;;
+  *)                                   check "sess-B reinforced as ultracst" "yes" "no"  ;;
 esac
 
 echo
@@ -91,7 +91,7 @@ esac
 
 echo
 echo "8. A malformed session id can never reach the filesystem"
-prompt '{"session_id":"../../pwned","prompt":"/ultracave"}' > /dev/null
+prompt '{"session_id":"../../pwned","prompt":"/ultracst"}' > /dev/null
 check "nothing escapes the store" "0" "$(find "$SANDBOX" -name '*pwned*' | wc -l | tr -d ' ')"
 
 echo
@@ -108,13 +108,13 @@ echo "10. Upgrade path: an old install has only the legacy flag, holding an old 
 export CLAUDE_CONFIG_DIR="$SANDBOX/old"
 mkdir -p "$CLAUDE_CONFIG_DIR"
 printf 'wenyan-lite' > "$CLAUDE_CONFIG_DIR/.cstman-active"
-check "badge maps legacy flag"    "[MEGACAVE]" "$(badge '{"session_id":"sess-X"}')"
+check "badge maps legacy flag"    "[MEGACST]" "$(badge '{"session_id":"sess-X"}')"
 case "$(prompt '{"session_id":"sess-X","prompt":"hi"}')" in
-  *'(megacave)'*) check "reinforcement maps legacy flag" "yes" "yes" ;;
+  *'(megacst)'*) check "reinforcement maps legacy flag" "yes" "yes" ;;
   *)              check "reinforcement maps legacy flag" "yes" "no"  ;;
 esac
 case "$(CSTMAN_DEFAULT_MODE=ultra activate '{"session_id":"sess-X","source":"compact"}')" in
-  *'mode: megacave'*) check "compaction keeps the legacy mode" "yes" "yes" ;;
+  *'mode: megacst'*) check "compaction keeps the legacy mode" "yes" "yes" ;;
   *)                  check "compaction keeps the legacy mode" "yes" "no"  ;;
 esac
 

@@ -46,7 +46,7 @@ function contextOf(stdout) {
   return out.hookSpecificOutput.additionalContext;
 }
 
-for (const mode of ['cstman', 'ultracave', 'megacave']) {
+for (const mode of ['cstman', 'ultracst', 'megacst']) {
   test(`subagent inherits this session's ${mode} skill`, t => {
     const { prompt, subagent } = fixture(t);
     prompt('/' + mode);
@@ -58,7 +58,7 @@ for (const mode of ['cstman', 'ultracave', 'megacave']) {
 
 test('deactivation does not leak into subagents', t => {
   const { prompt, subagent } = fixture(t);
-  prompt('/ultracave');
+  prompt('/ultracst');
   prompt('stop cstman');
   assert.equal(subagent(), '');
 });
@@ -71,8 +71,8 @@ test('a session that never activated injects nothing', t => {
 test('another window\'s mode does not reach a session that stored off', t => {
   const { prompt, subagent } = fixture(t);
   prompt('stop cstman');
-  // A second window turns ultracave on, which also rewrites the legacy mirror.
-  prompt('/ultracave', 's2');
+  // A second window turns ultracst on, which also rewrites the legacy mirror.
+  prompt('/ultracst', 's2');
   assert.equal(subagent(), '');
 });
 
@@ -82,12 +82,12 @@ test('another window\'s mode does not reach a session that stored off', t => {
 // per-turn reinforcement for the parent thread. Subagents match their parent.
 test('a session with no stored state falls back to the legacy mirror, like its parent thread', t => {
   const { prompt, subagent } = fixture(t);
-  prompt('/ultracave', 's2');
-  assert.match(contextOf(subagent()), /mode: ultracave\b/);
-  assert.match(prompt('hello'), /ultracave/i, 'the tracker reinforces the same mirrored mode');
+  prompt('/ultracst', 's2');
+  assert.match(contextOf(subagent()), /mode: ultracst\b/);
+  assert.match(prompt('hello'), /ultracst/i, 'the tracker reinforces the same mirrored mode');
 });
 
-for (const agentType of ['cstman:cavecrew-investigator', 'cavecrew-builder']) {
+for (const agentType of ['cstman:cstcrew-investigator', 'cstcrew-builder']) {
   test(`${agentType} keeps its own voice`, t => {
     const { prompt, subagent } = fixture(t);
     prompt('/cstman');
@@ -112,7 +112,7 @@ test('repo-local defaultMode off opts the project out (#634)', t => {
 
 test('subagent path writes nothing', t => {
   const { config, prompt, subagent } = fixture(t);
-  prompt('/ultracave');
+  prompt('/ultracst');
   const snapshot = () => {
     const files = {};
     const walk = (d) => {
@@ -132,7 +132,7 @@ test('subagent path writes nothing', t => {
 
 test('returns on the first complete payload while the host holds stdin open', async t => {
   const { env, project, prompt } = fixture(t);
-  prompt('/ultracave');
+  prompt('/ultracst');
   const started = Date.now();
   const child = spawn(process.execPath, [ACTIVATE, '--subagent'], { env, stdio: ['pipe', 'pipe', 'pipe'] });
   let stdout = '';
@@ -145,5 +145,5 @@ test('returns on the first complete payload while the host holds stdin open', as
   t.after(() => { try { child.stdin.destroy(); } catch (e) {} });
   assert.equal(code, 0);
   assert.ok(Date.now() - started < 1500, `took ${Date.now() - started}ms with stdin held open`);
-  assert.match(contextOf(stdout), /mode: ultracave/);
+  assert.match(contextOf(stdout), /mode: ultracst/);
 });

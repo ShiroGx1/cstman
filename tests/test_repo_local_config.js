@@ -65,7 +65,7 @@ test('reads .cstman.json in cwd', (tmp) => {
   fs.writeFileSync(path.join(tmp, '.cstman.json'),
     JSON.stringify({ defaultMode: 'ultra' }));
   process.chdir(tmp);
-  assert.strictEqual(getDefaultMode(), 'ultracave');
+  assert.strictEqual(getDefaultMode(), 'ultracst');
 });
 
 test('.cstman/config.json wins over .cstman.json at same level', (tmp) => {
@@ -85,7 +85,7 @@ test('walks up from nested cwd to find repo config', (tmp) => {
   const nested = path.join(tmp, 'a', 'b', 'c');
   fs.mkdirSync(nested, { recursive: true });
   process.chdir(nested);
-  assert.strictEqual(getDefaultMode(), 'megacave');
+  assert.strictEqual(getDefaultMode(), 'megacst');
 });
 
 test('env var beats repo-local config', (tmp) => {
@@ -94,7 +94,7 @@ test('env var beats repo-local config', (tmp) => {
     JSON.stringify({ defaultMode: 'lite' }));
   process.chdir(tmp);
   process.env.CSTMAN_DEFAULT_MODE = 'ultra';
-  assert.strictEqual(getDefaultMode(), 'ultracave');
+  assert.strictEqual(getDefaultMode(), 'ultracst');
 });
 
 test('repo-local config beats user config', (tmp) => {
@@ -183,13 +183,21 @@ test('getDefaultMode() with no args is unchanged (defaults to process.cwd())', (
 });
 
 test('new mode ids are accepted from every source', (tmp) => {
-  fs.writeFileSync(path.join(tmp, '.cstman.json'), JSON.stringify({ defaultMode: 'megacave' }));
+  fs.writeFileSync(path.join(tmp, '.cstman.json'), JSON.stringify({ defaultMode: 'megacst' }));
   process.chdir(tmp);
-  assert.strictEqual(getDefaultMode(), 'megacave');
-  process.env.CSTMAN_DEFAULT_MODE = 'ultracave';
-  assert.strictEqual(getDefaultMode(), 'ultracave');
+  assert.strictEqual(getDefaultMode(), 'megacst');
+  process.env.CSTMAN_DEFAULT_MODE = 'ultracst';
+  assert.strictEqual(getDefaultMode(), 'ultracst');
   process.env.CSTMAN_DEFAULT_MODE = 'manual';
   assert.strictEqual(getDefaultMode(), 'manual', 'manual stays a default-policy value');
+});
+
+test('old skill ids remain accepted as config aliases', (tmp) => {
+  for (const [oldId, newId] of [['ultracave', 'ultracst'], ['megacave', 'megacst']]) {
+    fs.writeFileSync(path.join(tmp, '.cstman.json'), JSON.stringify({ defaultMode: oldId }));
+    process.chdir(tmp);
+    assert.strictEqual(getDefaultMode(), newId, `${oldId} should resolve to ${newId}`);
+  }
 });
 
 // C37: hand-edited config files. PowerShell 5.1's `>` writes UTF-16LE with a
@@ -237,7 +245,7 @@ test('Windows reads %APPDATA% then ~/.config for the user config', (tmp) => {
     assert.strictEqual(getDefaultMode(), 'off', '~/.config is read when %APPDATA% has none');
     fs.mkdirSync(path.join(tmp, 'appdata', 'cstman'), { recursive: true });
     fs.writeFileSync(path.join(tmp, 'appdata', 'cstman', 'config.json'), '{"defaultMode":"ultra"}');
-    assert.strictEqual(getDefaultMode(), 'ultracave', '%APPDATA% wins when both name a mode');
+    assert.strictEqual(getDefaultMode(), 'ultracst', '%APPDATA% wins when both name a mode');
   } finally {
     Object.defineProperty(process, 'platform', platform);
     for (const [k, v] of Object.entries(saved)) {
@@ -324,11 +332,11 @@ test('repo reinforce beats user reinforce; user config applies without one', (tm
 });
 
 test('a repo config naming only defaultMode does not hide the user reinforce', (tmp) => {
-  fs.writeFileSync(path.join(tmp, '.cstman.json'), JSON.stringify({ defaultMode: 'ultracave' }));
+  fs.writeFileSync(path.join(tmp, '.cstman.json'), JSON.stringify({ defaultMode: 'ultracst' }));
   withUserConfig('{\n  // comments are fine\n  "reinforce": false,\n}', () => {
     process.chdir(tmp);
     assert.strictEqual(getReinforce(), false);
-    assert.strictEqual(getDefaultMode(), 'ultracave', 'defaultMode unaffected');
+    assert.strictEqual(getDefaultMode(), 'ultracst', 'defaultMode unaffected');
   });
 });
 

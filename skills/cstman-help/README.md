@@ -19,8 +19,8 @@ Also triggers on "cstman help", "what cstman commands", "how do I use cstman".
 ```
 Modes:
   /cstman              the voice (default)
-  /ultracave            grammar stripped
-  /megacave             classical Chinese
+  /ultracst            grammar stripped
+  /megacst             classical Chinese
   /cstman status       report the mode, change nothing
 
 Skills:

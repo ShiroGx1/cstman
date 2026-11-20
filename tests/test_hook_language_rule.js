@@ -128,22 +128,22 @@ test('fallback still tells the model not to switch languages', () => {
   assert.match(out, /never switch/i, 'the fallback dropped the rule instead of the example');
 });
 
-test('megacave fallback does not pair "never switch language" with its 文言 thesis', () => {
-  const out = activate({ withSkills: false, mode: 'megacave' });
-  assert.ok(out.includes('mode: megacave'), 'expected a megacave session');
+test('megacst fallback does not pair "never switch language" with its 文言 thesis', () => {
+  const out = activate({ withSkills: false, mode: 'megacst' });
+  assert.ok(out.includes('mode: megacst'), 'expected a megacst session');
   assert.ok(out.includes('以文言答'), 'the 文言 thesis went missing');
-  assert.doesNotMatch(out, /never switch/i, 'megacave fallback contradicts its own thesis');
-  assert.doesNotMatch(out, /User's language/, 'megacave fallback contradicts its own thesis');
+  assert.doesNotMatch(out, /never switch/i, 'megacst fallback contradicts its own thesis');
+  assert.doesNotMatch(out, /User's language/, 'megacst fallback contradicts its own thesis');
 });
 
-test('ultracave fallback keeps the user-language rule (its skill floor keeps it too)', () => {
-  const out = activate({ withSkills: false, mode: 'ultracave' });
-  assert.ok(out.includes('mode: ultracave'), 'expected an ultracave session');
+test('ultracst fallback keeps the user-language rule (its skill floor keeps it too)', () => {
+  const out = activate({ withSkills: false, mode: 'ultracst' });
+  assert.ok(out.includes('mode: ultracst'), 'expected an ultracst session');
   assert.match(out, /never switch/i);
 });
 
 test('every fallback keeps the plain-prose exceptions', () => {
-  for (const mode of ['cstman', 'ultracave', 'megacave']) {
+  for (const mode of ['cstman', 'ultracst', 'megacst']) {
     const out = activate({ withSkills: false, mode });
     assert.ok(
       out.includes('Plain prose for security warnings, irreversible actions, and anything persisted outside chat (code, commits, PRs, docs).'),

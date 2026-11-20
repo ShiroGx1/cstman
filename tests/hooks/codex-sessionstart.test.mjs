@@ -72,8 +72,8 @@ test('hand-copied fallback whitelist stays equal to cstman-config VALID_MODES', 
 
 // Distinctive lines from each skill body: proof the right SKILL.md travelled.
 const CSTMAN_BODY = /CSTMAN is a voice, not broken grammar\./;
-const ULTRA_BODY = /Ultracave is cstman with the grammar stripped\./;
-const MEGA_BODY = /Megacave is cstman in Classical Chinese\./;
+const ULTRA_BODY = /Ultracst is cstman with the grammar stripped\./;
+const MEGA_BODY = /Megacst is cstman in Classical Chinese\./;
 
 test('default resolution with no config emits the cstman skill', (t) => {
   const item = fixture(t);
@@ -86,10 +86,10 @@ test('default resolution with no config emits the cstman skill', (t) => {
 
 test('CSTMAN_DEFAULT_MODE wins over config files and selects its mode', (t) => {
   const item = fixture(t);
-  writeFileSync(join(item.dir, '.cstman.json'), JSON.stringify({ defaultMode: 'ultracave' }));
-  const r = runHook(item, item.dir, { CSTMAN_DEFAULT_MODE: 'megacave' });
+  writeFileSync(join(item.dir, '.cstman.json'), JSON.stringify({ defaultMode: 'ultracst' }));
+  const r = runHook(item, item.dir, { CSTMAN_DEFAULT_MODE: 'megacst' });
   assert.equal(r.status, 0, r.stderr);
-  assert.match(r.stdout, /mode: megacave/);
+  assert.match(r.stdout, /mode: megacst/);
   assert.match(r.stdout, MEGA_BODY);
   assert.doesNotMatch(r.stdout, ULTRA_BODY);
 });
@@ -99,7 +99,7 @@ test('repo-local .cstman.json defaultMode is honored (legacy value maps forward)
   writeFileSync(join(item.dir, '.cstman.json'), JSON.stringify({ defaultMode: 'ultra' }));
   const r = runHook(item, item.dir);
   assert.equal(r.status, 0, r.stderr);
-  assert.match(r.stdout, /mode: ultracave/);
+  assert.match(r.stdout, /mode: ultracst/);
   assert.match(r.stdout, ULTRA_BODY);
 });
 
@@ -150,8 +150,8 @@ test('degraded loader still resolves the mode and names it', (t) => {
   writeFileSync(join(item.dir, '.cstman.json'), JSON.stringify({ defaultMode: 'ultra' }));
   const r = runHook(item, item.dir);
   assert.equal(r.status, 0, r.stderr);
-  assert.match(r.stdout, /CSTMAN MODE ACTIVE — mode: ultracave/);
-  assert.match(r.stdout, /Rules: skills\/ultracave\/SKILL\.md/);
+  assert.match(r.stdout, /CSTMAN MODE ACTIVE — mode: ultracst/);
+  assert.match(r.stdout, /Rules: skills\/ultracst\/SKILL\.md/);
   assert.match(r.stdout, /Respond terse like smart cstman/);
   assert.doesNotMatch(r.stdout, /mode: cstman/);
   assert.doesNotMatch(r.stdout, /## Rules/, 'degraded path must not read SKILL.md');
@@ -180,14 +180,14 @@ test('CSTMAN_DEFAULT_MODE with stray whitespace is rejected, not trimmed', (t) =
   const r = runHook(item, item.dir, { CSTMAN_DEFAULT_MODE: ' ultra' });
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /mode: cstman/);
-  assert.doesNotMatch(r.stdout, /mode: ultracave/);
+  assert.doesNotMatch(r.stdout, /mode: ultracst/);
 });
 
-test('legacy wenyan default resolves to the megacave skill', (t) => {
+test('legacy wenyan default resolves to the megacst skill', (t) => {
   const item = fixture(t);
   const r = runHook(item, item.dir, { CSTMAN_DEFAULT_MODE: 'wenyan' });
   assert.equal(r.status, 0, r.stderr);
-  assert.match(r.stdout, /mode: megacave/);
+  assert.match(r.stdout, /mode: megacst/);
   assert.match(r.stdout, MEGA_BODY);
   assert.doesNotMatch(r.stdout, CSTMAN_BODY);
 });
@@ -221,7 +221,7 @@ test('symlinked repo config is refused, symmetric with the real resolver', (t) =
     const r = runHook(item, item.dir);
     assert.equal(r.status, 0, r.stderr);
     if (linked) {
-      assert.doesNotMatch(r.stdout, /mode: ultracave/, 'symlinked config must not be honored');
+      assert.doesNotMatch(r.stdout, /mode: ultracst/, 'symlinked config must not be honored');
       assert.match(r.stdout, /mode: cstman/);
     } else {
       assert.match(r.stdout, /mode: cstman/, 'config absent on this platform → built-in default');

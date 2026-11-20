@@ -155,8 +155,8 @@ test("skills list --json exposes closed metadata and deterministic suites", asyn
       "cstman-manage",
       "cstman-optimize",
       "cstman-setup",
-      "megacave",
-      "ultracave",
+      "megacst",
+      "ultracst",
     ],
   );
 });

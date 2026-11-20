@@ -80,7 +80,7 @@ const HOOK_FILES = [
   'cstman-stats.js',
   'cstman-statusline.sh',
   'cstman-statusline.ps1',
-  'cavecrew-model-overrides.js',
+  'cstcrew-model-overrides.js',
 ];
 
 // hooks/package.json is the ONE entry in HOOK_FILES with no `cstman` in its
@@ -957,7 +957,7 @@ function installViaSkills(ctx, prov) {
 // one whose command runs our script; foreign hooks and the cstman CLI's
 // native-hook entries are never touched. --no-hooks / --minimal skip it.
 const CODEX_PAYLOAD_DIR = 'cstman';
-const CODEX_HOOK_SKILLS = ['cstman', 'ultracave', 'megacave'];
+const CODEX_HOOK_SKILLS = ['cstman', 'ultracst', 'megacst'];
 
 function codexHome() {
   return process.env.CODEX_HOME || path.join(os.homedir(), '.codex');
@@ -1106,7 +1106,7 @@ function installGrokAgentsBlock(ctx) {
 }
 
 
-// Cursor extras beyond the upstream skill profile: cavecrew subagents and a
+// Cursor extras beyond the upstream skill profile: cstcrew subagents and a
 // user sessionStart hook (installer/lib/cursor-native.js). `--no-hooks` keeps the
 // agents only.
 function installCursorNative(ctx) {
@@ -1183,7 +1183,7 @@ function installCopilotCliHook(ctx) {
 
 // ── hermes native install ──────────────────────────────────────────────────
 // Drops the cstman skills into ~/.hermes/skills/productivity/ (or HERMES_HOME if set).
-const HERMES_SKILL_DIRS = ['cstman', 'ultracave', 'megacave', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cavecrew'];
+const HERMES_SKILL_DIRS = ['cstman', 'ultracst', 'megacst', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cstcrew'];
 
 function hermesConfigDir() {
   // Hermes uses ~/.hermes by default, or HERMES_HOME env var. Hermes 0.21.5 reads
@@ -1309,9 +1309,9 @@ function installAntigravityCli(ctx) {
 // opencode.json with a "plugin" array entry. Mirrors the Claude Code hook
 // architecture as closely as opencode allows — only the statusline is missing
 // (opencode's TUI exposes no plugin-writable badge).
-const OPENCODE_SKILL_DIRS  = ['cstman', 'ultracave', 'megacave', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cavecrew'];
-const OPENCODE_AGENT_FILES = ['cavecrew-investigator.md', 'cavecrew-builder.md', 'cavecrew-reviewer.md'];
-const OPENCODE_COMMAND_FILES = ['cstman.md', 'ultracave.md', 'megacave.md', 'cstman-commit.md', 'cstman-review.md', 'cstman-compress.md', 'cstman-stats.md', 'cstman-help.md'];
+const OPENCODE_SKILL_DIRS  = ['cstman', 'ultracst', 'megacst', 'cstman-commit', 'cstman-review', 'cstman-help', 'cstman-stats', 'cstman-compress', 'cstcrew'];
+const OPENCODE_AGENT_FILES = ['cstcrew-investigator.md', 'cstcrew-builder.md', 'cstcrew-reviewer.md'];
+const OPENCODE_COMMAND_FILES = ['cstman.md', 'ultracst.md', 'megacst.md', 'ultracave.md', 'megacave.md', 'cstman-commit.md', 'cstman-review.md', 'cstman-compress.md', 'cstman-stats.md', 'cstman-help.md'];
 // The directory: opencode 1.x imports it through its package.json main
 // (plugin.js), opencode 2.x loads its server.js. A plugin.js entry worked on
 // 1.x only and made 2.x warn "configured plugin path must be a directory".
@@ -1584,7 +1584,7 @@ function installOpencode(ctx) {
     note(`  would mkdir ${pluginDir}/, ${commandsDir}/, ${agentsDir}/, ${skillsDir}/`);
     note(`  would copy plugin.js + server.js + package.json + cstman-config.cjs + cstman-parse.cjs into ${pluginDir}/`);
     note(`  would copy ${OPENCODE_COMMAND_FILES.length} command files into ${commandsDir}/`);
-    note(`  would copy ${OPENCODE_AGENT_FILES.length} cavecrew agents into ${agentsDir}/`);
+    note(`  would copy ${OPENCODE_AGENT_FILES.length} cstcrew agents into ${agentsDir}/`);
     note(`  would copy ${OPENCODE_SKILL_DIRS.length} skill dirs into ${skillsDir}/`);
     note(`  would patch ${opencodeJson} with "plugin" entry${opts.withMcpShrink ? ' + cstman-shrink MCP' : ''}`);
     note(`  would write Tier-3 ruleset to ${agentsMd}`);

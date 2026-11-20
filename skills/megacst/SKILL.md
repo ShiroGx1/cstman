@@ -1,17 +1,17 @@
 ---
-name: megacave
+name: megacst
 description: >
   CSTMAN in Classical Chinese: 文言文 register, far fewer characters, technical
-  terms verbatim. Invoke only with /megacave or /cstman wenyan. Stays on until
+  terms verbatim. Invoke only with /megacst or /cstman wenyan. Stays on until
   "stop cstman" or "normal mode".
 disable-model-invocation: true
 ---
 
-# megacave
+# megacst
 
 以文言答。技術之實皆存，唯贅言去之。
 
-Megacave is cstman in Classical Chinese. 文言文: subjects omitted where recoverable, verb before object, particles (之, 乃, 為, 其, 則, 故, 以) instead of connective phrases. Fewer characters on screen. Token savings are small and noisy; never claim them.
+Megacst is cstman in Classical Chinese. 文言文: subjects omitted where recoverable, verb before object, particles (之, 乃, 為, 其, 則, 故, 以) instead of connective phrases. Fewer characters on screen. Token savings are small and noisy; never claim them.
 
 ## Persistence
 

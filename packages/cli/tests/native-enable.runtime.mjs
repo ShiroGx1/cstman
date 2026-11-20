@@ -3164,7 +3164,7 @@ test("enable claude installs the voice skills and discloses the write", async ()
   const fx = voiceFixture();
   const enabled = await run(["enable", "claude"], fx.env);
   assert.equal(enabled.code, 0, enabled.stderr);
-  for (const name of ["cstman", "ultracave", "megacave"]) {
+  for (const name of ["cstman", "ultracst", "megacst"]) {
     assert.match(readFileSync(fx.skill(name), "utf8"), new RegExp(`^---\\nname: ${name}\\n`));
     assert.ok(enabled.stderr.includes(fx.skill(name)), enabled.stderr);
   }
@@ -3173,7 +3173,7 @@ test("enable claude installs the voice skills and discloses the write", async ()
   const disabled = await run(["disable", "claude"], fx.env);
   assert.equal(disabled.code, 0, disabled.stderr);
   // disable turns off routing and hooks; the skills are the user's and stay.
-  for (const name of ["cstman", "ultracave", "megacave"]) {
+  for (const name of ["cstman", "ultracst", "megacst"]) {
     assert.match(readFileSync(fx.skill(name), "utf8"), new RegExp(`^---\\nname: ${name}\\n`));
   }
 });
@@ -3199,17 +3199,17 @@ test("a pre-existing voice skill is never clobbered and survives disable", async
   assert.equal(enabled.code, 0, enabled.stderr);
   assert.equal(readFileSync(fx.skill("cstman"), "utf8"), "mine\n");
   assert.equal(enabled.stderr.includes(fx.skill("cstman")), false, "must not claim a file it did not write");
-  assert.ok(existsSync(fx.skill("ultracave")));
+  assert.ok(existsSync(fx.skill("ultracst")));
   assert.equal((await run(["disable", "claude"], fx.env)).code, 0);
   assert.equal(readFileSync(fx.skill("cstman"), "utf8"), "mine\n");
-  assert.ok(existsSync(fx.skill("ultracave")));
+  assert.ok(existsSync(fx.skill("ultracst")));
 });
 
 test("editing or deleting a voice skill never degrades the integration or blocks enable", async () => {
   const fx = voiceFixture();
   assert.equal((await run(["enable", "claude"], fx.env)).code, 0);
   writeFileSync(fx.skill("cstman"), "pixelized\n");
-  rmSync(dirname(fx.skill("megacave")), { recursive: true });
+  rmSync(dirname(fx.skill("megacst")), { recursive: true });
   const doctor = await run(["doctor", "claude"], fx.env);
   assert.equal(doctor.code, 0, doctor.stderr);
   assert.equal(JSON.parse(doctor.stdout).state, "installed");
@@ -3217,7 +3217,7 @@ test("editing or deleting a voice skill never degrades the integration or blocks
   assert.equal(again.code, 0, again.stderr);
   assert.match(again.stderr, /already enabled/);
   assert.equal(readFileSync(fx.skill("cstman"), "utf8"), "pixelized\n");
-  assert.equal(existsSync(fx.skill("megacave")), false, "a deleted skill is not written back");
+  assert.equal(existsSync(fx.skill("megacst")), false, "a deleted skill is not written back");
 });
 
 test("enable on an install that predates voice skills picks them up once", async () => {
@@ -3249,7 +3249,7 @@ test("enable codex skips a voice skill the Skills CLI already put in ~/.agents/s
   const codex = await run(["enable", "codex"], fx.env);
   assert.equal(codex.code, 0, codex.stderr);
   assert.equal(existsSync(fx.skill("cstman", join(fx.home, "codex-home"))), false);
-  assert.ok(existsSync(fx.skill("ultracave", join(fx.home, "codex-home"))));
+  assert.ok(existsSync(fx.skill("ultracst", join(fx.home, "codex-home"))));
 });
 
 test("routing on puts Auto in Claude's and OpenCode's pickers; disable takes it out", async () => {

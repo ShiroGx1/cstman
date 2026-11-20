@@ -51,7 +51,7 @@ By design, v1 is conservative:
 
 ## Status
 
-Pre-1.0 — the compression rules and field set may change. The plugin is part of the [cstman ecosystem](https://github.com/JuliusBrussee/cstman); see the parent repo for the full skill suite (`cstman`, `cavemem`, `cavekit`, `cavecrew`, `cstman-stats`, `cstman-init`).
+Pre-1.0 — the compression rules and field set may change. The plugin is part of the [cstman ecosystem](https://github.com/JuliusBrussee/cstman); see the parent repo for the full skill suite (`cstman`, `cavemem`, `cavekit`, `cstcrew`, `cstman-stats`, `cstman-init`).
 
 ## License
 

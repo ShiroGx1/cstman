@@ -124,8 +124,8 @@ test('envelope one-line form switches mode', () => {
   try {
     fs.writeFileSync(path.join(cfg, '.cstman-active'), 'cstman');
     const r = send(cfg, { prompt: envelope('/cstman', 'ultra', false) });
-    assert.strictEqual(flagValue(cfg), 'ultracave', 'legacy alias must store the new id');
-    assert.match(r.stdout, /CSTMAN MODE ACTIVE \(ultracave\)/);
+    assert.strictEqual(flagValue(cfg), 'ultracst', 'legacy alias must store the new id');
+    assert.match(r.stdout, /CSTMAN MODE ACTIVE \(ultracst\)/);
   } finally {
     fs.rmSync(cfg, { recursive: true, force: true });
   }
@@ -136,16 +136,16 @@ test('envelope newline-separated form switches mode', () => {
   try {
     fs.writeFileSync(path.join(cfg, '.cstman-active'), 'cstman');
     send(cfg, { prompt: envelope('/cstman', 'wenyan-lite', true) });
-    assert.strictEqual(flagValue(cfg), 'megacave');
+    assert.strictEqual(flagValue(cfg), 'megacst');
   } finally {
     fs.rmSync(cfg, { recursive: true, force: true });
   }
 });
 
-test('/ultracave and /megacave envelopes (bare and namespaced) switch mode', () => {
+test('/ultracst and /megacst envelopes (bare and namespaced) switch mode', () => {
   for (const [name, mode] of [
-    ['/ultracave', 'ultracave'], ['/cstman:ultracave', 'ultracave'],
-    ['/megacave', 'megacave'], ['/cstman:megacave', 'megacave'],
+    ['/ultracst', 'ultracst'], ['/cstman:ultracst', 'ultracst'],
+    ['/megacst', 'megacst'], ['/cstman:megacst', 'megacst'],
   ]) {
     const cfg = makeConfigDir();
     try {
@@ -328,7 +328,7 @@ test('the notice names the three mode commands, not the legacy levels', () => {
   const cfg = makeConfigDir();
   try {
     const ctx = contextOf(send(cfg, { prompt: '/cstman nope' }));
-    assert.match(ctx, /Modes: \/cstman, \/ultracave, \/megacave\./);
+    assert.match(ctx, /Modes: \/cstman, \/ultracst, \/megacst\./);
     assert.doesNotMatch(ctx, /lite|wenyan|ultra\b/, `legacy level names advertised: ${ctx}`);
   } finally {
     fs.rmSync(cfg, { recursive: true, force: true });
@@ -355,7 +355,7 @@ test('a typo does not strand the user in a one-shot independent mode (#599)', ()
     fs.writeFileSync(path.join(cfg, '.cstman-active.prev'), 'ultra');
     const ctx = contextOf(send(cfg, { prompt: '/cstman ultrra' }));
     // The legacy prev 'ultra' is restored as its new id.
-    assert.strictEqual(flagValue(cfg), 'ultracave', 'the prose mode must still be restored this turn');
+    assert.strictEqual(flagValue(cfg), 'ultracst', 'the prose mode must still be restored this turn');
     assert.match(ctx, /not recognized/, 'and the notice must still be delivered');
   } finally {
     fs.rmSync(cfg, { recursive: true, force: true });
@@ -370,7 +370,7 @@ test('the notice and the per-turn reinforcement share one write', () => {
     assert.doesNotThrow(() => JSON.parse(result.stdout), 'two writes would produce invalid JSON');
     const ctx = contextOf(result);
     assert.match(ctx, /not recognized/);
-    assert.match(ctx, /CSTMAN MODE ACTIVE \(ultracave\)/, 'the turn must not lose its reinforcement');
+    assert.match(ctx, /CSTMAN MODE ACTIVE \(ultracst\)/, 'the turn must not lose its reinforcement');
   } finally {
     fs.rmSync(cfg, { recursive: true, force: true });
   }

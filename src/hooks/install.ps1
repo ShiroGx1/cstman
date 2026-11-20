@@ -24,7 +24,7 @@ $HooksDir = Join-Path $ClaudeDir "hooks"
 $Settings = Join-Path $ClaudeDir "settings.json"
 $RepoUrl = "https://raw.githubusercontent.com/JuliusBrussee/cstman/main/src/hooks"
 
-$HookFiles = @("package.json", "cstman-config.js", "cstman-parse.js", "cstman-activate.js", "cstman-mode-tracker.js", "cstman-stats.js", "cstman-statusline.sh", "cstman-statusline.ps1", "cavecrew-model-overrides.js")
+$HookFiles = @("package.json", "cstman-config.js", "cstman-parse.js", "cstman-activate.js", "cstman-mode-tracker.js", "cstman-stats.js", "cstman-statusline.sh", "cstman-statusline.ps1", "cstcrew-model-overrides.js")
 
 # Resolve source — works from repo clone or remote
 $ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { $null }
@@ -294,6 +294,6 @@ Write-Host "What's installed:"
 Write-Host "  - SessionStart hook: auto-loads cstman rules every session"
 Write-Host "  - SubagentStart hook: subagents inherit the session's active mode"
 Write-Host "  - Mode tracker hook: updates statusline badge when you switch modes"
-Write-Host "    (/cstman, /ultracave, /megacave, /cstman-commit, etc.)"
+Write-Host "    (/cstman, /ultracst, /megacst, /cstman-commit, etc.)"
 Write-Host "  - SessionEnd hook: records lifetime stats silently"
-Write-Host "  - Statusline badge: shows [CSTMAN], [ULTRACAVE] or [MEGACAVE]"
+Write-Host "  - Statusline badge: shows [CSTMAN], [ULTRACST] or [MEGACST]"

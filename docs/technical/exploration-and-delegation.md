@@ -52,9 +52,9 @@ already names exact file or symbol, or earlier evidence provides usable location
 Isolation is mechanism, not outcome guarantee. Explorer call adds model usage.
 Compare total task usage and resolution quality before claiming net benefit.
 
-## Cavecrew
+## CST Crew
 
-`cavecrew` is a decision guide for three compact Claude Code subagents:
+`cstcrew` is a decision guide for three compact Claude Code subagents:
 
 | Subagent | Permission and output | Intended scope |
 |---|---|---|

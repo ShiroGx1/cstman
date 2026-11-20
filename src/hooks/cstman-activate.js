@@ -72,16 +72,16 @@ function requireSibling(name, isUsable) {
 // Hand-copy of cstman-config.js VALID_MODES, used only when that module is
 // unavailable. tests/test_hook_missing_sibling.js asserts the two stay equal.
 const FALLBACK_VALID_MODES = [
-  'off', 'cstman', 'ultracave', 'megacave',
+  'off', 'cstman', 'ultracst', 'megacst',
   'commit', 'review', 'compress'
 ];
 const FALLBACK_DEFAULT_MODES = [...FALLBACK_VALID_MODES, 'manual'];
 // Hand-copy of cstman-config.js LEGACY_MODES: a config file or env var still
 // naming a pre-three-skill level must resolve the same way when degraded.
 const FALLBACK_LEGACY_MODES = {
-  lite: 'cstman', full: 'cstman', ultra: 'ultracave',
-  wenyan: 'megacave', 'wenyan-lite': 'megacave',
-  'wenyan-full': 'megacave', 'wenyan-ultra': 'megacave',
+  lite: 'cstman', full: 'cstman', ultra: 'ultracst',
+  wenyan: 'megacst', 'wenyan-lite': 'megacst',
+  'wenyan-full': 'megacst', 'wenyan-ultra': 'megacst',
 };
 function fallbackCanonicalDefault(raw) {
   if (typeof raw !== 'string') return null;
@@ -208,7 +208,7 @@ const INDEPENDENT_MODES = new Set(['commit', 'review', 'compress']);
 // SessionStart only: the subagent path writes nothing.
 if (!SUBAGENT) {
   try {
-    const { applyOverrides, resolvePluginRoot } = require('./cavecrew-model-overrides');
+    const { applyOverrides, resolvePluginRoot } = require('./cstcrew-model-overrides');
     applyOverrides(resolvePluginRoot(__dirname));
   } catch (e) {}
 }
@@ -236,7 +236,7 @@ if (!SUBAGENT) {
 // A watchdog covers the case where the payload never completes at all: activate
 // well inside the budget instead of forfeiting the session. It must NOT assume
 // `startup` — that is the one source that resets the mode, so a slow payload on
-// a `compact`/`resume` event would silently drop a user's mid-session `ultracave`
+// a `compact`/`resume` event would silently drop a user's mid-session `ultracst`
 // back to the default (#691 through the timeout door). An unknown source
 // preserves a valid existing flag. The deadline sits well below the host's 5s
 // budget but far enough above a cold Windows/AV start to be reached rarely.
@@ -267,7 +267,7 @@ function startMode(sessionCwd) {
 function activate(payload, timedOut) {
   // Unknown, not startup: we never saw the payload, so we cannot claim to know
   // what kind of session event this was — and 'unknown' must not reset, or a
-  // slow payload on a compact would drop a mid-session ultracave (#691 through the
+  // slow payload on a compact would drop a mid-session ultracst (#691 through the
   // timeout door) and re-arm a session the user turned off.
   let source = timedOut ? 'unknown' : 'startup';
   // The session's cwd, which is not necessarily this hook process's cwd. The
@@ -299,8 +299,8 @@ function activate(payload, timedOut) {
 function runSubagent(sessionCwd, sessionId, agentType) {
   const mode = resolveActiveMode(claudeDir, sessionId);
   if (!mode || INDEPENDENT_MODES.has(mode)) return;
-  // cavecrew agents carry their own ultracave voice.
-  if (/(^|:)cavecrew-/.test(agentType)) return;
+  // cstcrew agents carry their own ultracst voice.
+  if (/(^|:)cstcrew-/.test(agentType)) return;
   // #634 repo opt-out, same gate as the tracker's per-turn reinforcement.
   if (getDefaultMode(sessionCwd) === 'off') return;
   process.stdout.write(JSON.stringify({
@@ -370,7 +370,7 @@ const fallbackRuleset = cfg.fallbackRuleset || ((m) => {
     '5. One idea per sentence.\n' +
     '6. Payload verbatim.\n' +
     '7. Tool runs: bounded status.\n' +
-    (m === 'megacave'
+    (m === 'megacst'
       ? '8. Prose in 文言. Code, commands, paths, errors in their original script.\n'
       : "8. User's language. Compress the style, not the language. Never switch because of quoted text.\n") +
     '9. Never perform cstman.\n\n' +
@@ -378,7 +378,7 @@ const fallbackRuleset = cfg.fallbackRuleset || ((m) => {
     (modeThesis ? '\n\n' + modeThesis : '');
 });
 
-const SWITCH_LINE = 'Switch: /cstman, /ultracave, /megacave. Off: "stop cstman" or "normal mode".';
+const SWITCH_LINE = 'Switch: /cstman, /ultracst, /megacst. Off: "stop cstman" or "normal mode".';
 
 // Without a skill file (standalone hook install without skills dir) the body is
 // cstman-config's fallback ruleset: thesis, rule headlines, the mode's thesis.
@@ -622,7 +622,7 @@ try {
             : "a script that no longer exists (" + staleCommand + "), which hides the Claude Code status bar. ") +
           "STATUSLINE SETUP NEEDED: repoint it in "
         : "STATUSLINE SETUP NEEDED: The cstman plugin includes a statusline badge showing active mode " +
-          "(e.g. [CSTMAN], [ULTRACAVE]). It is not configured yet. " +
+          "(e.g. [CSTMAN], [ULTRACST]). It is not configured yet. " +
           "To enable, add this to ") +
       path.join(claudeDir, 'settings.json') + ": " +
       statusLineSnippet + " " +

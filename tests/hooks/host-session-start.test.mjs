@@ -42,16 +42,16 @@ function run(host, { env, cwd, payload = {} }) {
   return JSON.parse(r.stdout);
 }
 
-test('copilot: ultracave default emits the ultracave skill under additionalContext', (t) => {
+test('copilot: ultracst default emits the ultracst skill under additionalContext', (t) => {
   const { dir, env } = fixture(t);
-  env.CSTMAN_DEFAULT_MODE = 'ultracave';
+  env.CSTMAN_DEFAULT_MODE = 'ultracst';
   const out = run('copilot', { env, cwd: dir, payload: { sessionId: 's', source: 'startup', cwd: dir } });
   assert.deepEqual(Object.keys(out), ['additionalContext']);
-  assert.match(out.additionalContext, /^CSTMAN MODE ACTIVE — mode: ultracave\n\n/);
+  assert.match(out.additionalContext, /^CSTMAN MODE ACTIVE — mode: ultracst\n\n/);
   // No standalone `CSTMAN mode:` line: Copilot CLI 1.0.92 echoed it at the
   // top of ordinary answers (2 of 3 live runs; 0 of 3 without it).
   assert.doesNotMatch(out.additionalContext, /^CSTMAN mode:/m);
-  assert.ok(out.additionalContext.includes(skillBody('ultracave')));
+  assert.ok(out.additionalContext.includes(skillBody('ultracst')));
 });
 
 test('cursor: default mode emits the cstman skill under additional_context', (t) => {
@@ -66,7 +66,7 @@ test('a legacy configured level resolves to its v3 skill', (t) => {
   const { dir, env } = fixture(t);
   env.CSTMAN_DEFAULT_MODE = 'wenyan-lite';
   const out = run('cursor', { env, cwd: dir });
-  assert.ok(out.additional_context.includes(skillBody('megacave')));
+  assert.ok(out.additional_context.includes(skillBody('megacst')));
 });
 
 for (const mode of ['off', 'manual', 'commit']) {
