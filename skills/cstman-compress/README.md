@@ -75,7 +75,7 @@ preserved exactly.
 </td>
 <td width="50%">
 
-### <img src="../../docs/assets/dancing-rock.svg" width="20" height="20" alt="rock"/> CSTMAN (421 tokens)
+### CSTMAN (421 tokens)
 
 > "Prefer TypeScript strict mode always. No `any` unless unavoidable; comment why if used. Proper types catch bugs early."
 

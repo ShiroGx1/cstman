@@ -7,15 +7,15 @@ from the published numbers. Wrap-benchmark numbers are transcribed from
 docs/WRAP-BENCHMARK.md (generated 2026-08-06, benchmark_counterfactual).
 
 Usage: python3 benchmarks/render_charts.py
-Writes: docs/assets/chart-skill-output{,-dark}.svg
-        docs/assets/chart-wrap-input{,-dark}.svg
+Writes: benchmarks/generated/chart-skill-output{,-dark}.svg
+        benchmarks/generated/chart-wrap-input{,-dark}.svg
 """
 
 from html import escape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ASSETS = ROOT / "docs" / "assets"
+ASSETS = ROOT / "benchmarks" / "generated"
 
 FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
 
@@ -171,10 +171,11 @@ def chart_wrap(c):
 
 
 def main():
+    ASSETS.mkdir(parents=True, exist_ok=True)
     for suffix, c in MODES.items():
         (ASSETS / f"chart-skill-output{suffix}.svg").write_text(chart_skill(c), encoding="utf-8")
         (ASSETS / f"chart-wrap-input{suffix}.svg").write_text(chart_wrap(c), encoding="utf-8")
-    print("wrote 4 SVGs to docs/assets/")
+    print("wrote 4 SVGs to benchmarks/generated/")
 
 
 if __name__ == "__main__":
