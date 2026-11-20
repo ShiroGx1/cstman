@@ -1,0 +1,86 @@
+name: Sync SKILL.md and rules
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - skills/cstman/SKILL.md
+      - skills/ultracave/SKILL.md
+      - skills/megacave/SKILL.md
+      - skills/cavecrew/SKILL.md
+      - agents/cavecrew-*.md
+      - skills/cstman-compress/SKILL.md
+      - skills/cstman-compress/scripts/**
+
+concurrency:
+  group: sync-skill
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Pull latest before making changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+
+      - name: Sync SKILL.md copies
+        run: |
+          cp skills/cstman/SKILL.md plugins/cstman/skills/cstman/SKILL.md
+          mkdir -p plugins/cstman/skills/ultracave plugins/cstman/skills/megacave
+          cp skills/ultracave/SKILL.md plugins/cstman/skills/ultracave/SKILL.md
+          cp skills/megacave/SKILL.md plugins/cstman/skills/megacave/SKILL.md
+
+      - name: Sync cstman-compress skill to plugin
+        run: |
+          # Plugin distribution mirrors source verbatim — no rename, no sed.
+          mkdir -p plugins/cstman/skills/cstman-compress
+          cp skills/cstman-compress/SKILL.md plugins/cstman/skills/cstman-compress/SKILL.md
+          rm -rf plugins/cstman/skills/cstman-compress/scripts
+          cp -r skills/cstman-compress/scripts plugins/cstman/skills/cstman-compress/scripts
+          rm -rf plugins/cstman/skills/cstman-compress/scripts/__pycache__
+
+      - name: Sync cavecrew skill + agents to plugin
+        run: |
+          mkdir -p plugins/cstman/skills/cavecrew plugins/cstman/agents
+          cp skills/cavecrew/SKILL.md plugins/cstman/skills/cavecrew/SKILL.md
+          cp agents/cavecrew-investigator.md plugins/cstman/agents/cavecrew-investigator.md
+          cp agents/cavecrew-builder.md plugins/cstman/agents/cavecrew-builder.md
+          cp agents/cavecrew-reviewer.md plugins/cstman/agents/cavecrew-reviewer.md
+
+      - name: Rebuild cstman.skill ZIP
+        # `zip -r` ADDS to an existing archive, and dist/cstman.skill is tracked
+        # (.gitignore keeps it with `!dist/cstman.skill`), so a file deleted from
+        # skills/cstman/ never left the shipped ZIP — it just stopped being
+        # updated. Delete first so the archive is genuinely rebuilt.
+        run: mkdir -p dist && rm -f dist/cstman.skill && cd skills && zip -r ../dist/cstman.skill cstman/
+
+      - name: Commit and push if changed
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          git add \
+            skills/cstman-compress/ \
+            plugins/cstman/skills/cstman-compress/ \
+            plugins/cstman/skills/cstman/SKILL.md \
+            plugins/cstman/skills/ultracave/SKILL.md \
+            plugins/cstman/skills/megacave/SKILL.md \
+            plugins/cstman/skills/cavecrew/SKILL.md \
+            plugins/cstman/agents/cavecrew-investigator.md \
+            plugins/cstman/agents/cavecrew-builder.md \
+            plugins/cstman/agents/cavecrew-reviewer.md \
+            dist/cstman.skill
+          git diff --staged --quiet && exit 0
+          git commit -m "chore: sync SKILL.md copies [skip ci]"
+          git config --local credential.helper '!f() { echo "username=x-access-token"; echo "password=$GITHUB_TOKEN"; }; f'
+          git push "https://github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+          git config --local --unset credential.helper

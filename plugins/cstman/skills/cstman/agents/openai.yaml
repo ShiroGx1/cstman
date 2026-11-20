@@ -1,0 +1,6 @@
+interface:
+  display_name: "CSTMAN"
+  short_description: "Talk like cstman. Cut filler. Keep technical accuracy."
+  icon_small: "./assets/cstman-small.svg"
+  icon_large: "./assets/cstman.svg"
+  default_prompt: "Use $cstman to answer briefly, cut filler, and preserve exact technical substance."

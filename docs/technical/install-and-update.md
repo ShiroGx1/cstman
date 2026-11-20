@@ -1,0 +1,191 @@
+# Install and update
+
+CSTMAN ships a response-skill installer and a separate local-runtime CLI.
+Choose either one or install both.
+
+## Requirements
+
+| Surface | Minimum runtime |
+|---|---|
+| Skill installer | Node.js 18 |
+| `cstman` | Node.js 22.13 |
+| Source build | Go version in [`go.mod`](../../go.mod), Node.js, and pnpm |
+| Browser extension development | Node.js plus pinned Playwright dependencies |
+
+Prebuilt companion binaries cover macOS, Linux, and Windows on amd64 and arm64.
+Run `cstman setup` to inspect current machine support.
+
+## Skill-only install
+
+Run installer directly from GitHub:
+
+```bash
+npx -y github:JuliusBrussee/cstman
+```
+
+It detects installed agents and installs only matching integrations. List every
+known target:
+
+```bash
+npx -y github:JuliusBrussee/cstman -- --list
+```
+
+Install one target:
+
+```bash
+npx -y github:JuliusBrussee/cstman -- --only claude
+npx -y github:JuliusBrussee/cstman -- --only codex
+```
+
+Claude Code uses its plugin system, while Gemini CLI uses its extension system.
+opencode, OpenClaw, and Hermes have native installers; skills-compatible hosts
+use external Skills CLI, and targets labeled `soft` require `--only` because
+local detection is unreliable.
+
+Useful installer controls:
+
+| Flag | Effect |
+|---|---|
+| `--dry-run` | Print commands and writes without changing state |
+| `--force` | Reinstall an existing target |
+| `--minimal` | Install plugin or extension without hooks or project rules |
+| `--with-hooks` / `--no-hooks` | Control Claude Code hooks |
+| `--with-init` | Write current-project rule files |
+| `--with-mcp-shrink="<command>"` | Wrap one upstream MCP server |
+| `--non-interactive` | Disable prompts |
+| `--config-dir <path>` | Select Claude Code hook/config directory |
+
+Full command reference lives in [`INSTALL.md`](../../INSTALL.md).
+
+## Local runtime install
+
+```bash
+npm install -g cstman
+cstman setup --install
+```
+
+`setup --install` downloads the release checksum manifest and signature. It
+verifies the pinned public key, checks each artifact SHA-256, and installs by
+atomic rename under `~/.cstman/bin`. A failed verification leaves the
+candidate binary uninstalled.
+
+Inspect result:
+
+```bash
+cstman setup
+cstman setup --json
+```
+
+Required binaries power proxy, Engine, MCP recovery, and memory. Browser and
+tool-catalog shrink binaries are optional.
+
+## First run
+
+```bash
+cstman claude
+```
+
+The command persistently enables Claude's native CSTMAN integration, then runs
+Claude. Undo with `cstman disable claude`. Use `cstman wrap claude` for one
+ephemeral session with no persistent host-config changes. An interactive first
+run can install missing signed binaries and continue. Non-interactive runs never
+silently download a runtime; prepare them with `cstman setup --install`.
+
+Check direct pass-through before enabling transforms:
+
+```bash
+cstman wrap --off claude
+cstman status
+```
+
+Then use default recoverable compression:
+
+```bash
+cstman claude
+```
+
+No CSTMAN account is required for either local mode.
+
+## Build from source
+
+Clone repository and run platform installer:
+
+```bash
+git clone https://github.com/JuliusBrussee/cstman.git
+cd cstman
+./scripts/install-local-cli.sh
+```
+
+Windows PowerShell:
+
+```powershell
+git clone https://github.com/JuliusBrussee/cstman.git
+Set-Location cstman
+pwsh -File scripts/install-local-cli.ps1
+```
+
+Source build uses versions pinned by repository manifests. Do not mix an old
+CLI with newer companion binaries; `cstman setup` reports version drift.
+
+## Existing reviewed binaries
+
+Every companion accepts an environment override:
+
+```bash
+export CSTMAN_PROXY_BIN=/reviewed/path/cstman-proxy
+export CSTMAN_ENGINE_BIN=/reviewed/path/cstman-engine
+export CSTMAN_MCP_BIN=/reviewed/path/cstman-mcp
+export CSTMAN_BROWSE_BIN=/reviewed/path/cstman-browse
+export CSTMAN_SHRINK_BIN=/reviewed/path/cstman-shrink
+```
+
+This bypasses download lookup and is useful for source builds or controlled
+deployment images.
+
+## Update
+
+Update JavaScript CLI through npm, then repair binary bundle:
+
+```bash
+npm install -g cstman@latest
+cstman setup --install
+cstman setup
+```
+
+Skill/plugin updates follow host's plugin or Skills CLI update flow. Re-running
+GitHub installer is idempotent for installer-owned files.
+
+## Uninstall
+
+Remove installer-managed skill integrations **and** native agent routing. Order
+matters: this step shells out to `cstman disable --all`, so it needs the CLI
+still installed.
+
+```bash
+npx -y github:JuliusBrussee/cstman -- --uninstall
+```
+
+Then remove global CLI through npm:
+
+```bash
+npm uninstall -g cstman
+```
+
+Reversed, the native route survives — for Claude Code that leaves
+`ANTHROPIC_BASE_URL` and `_CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL` in
+`~/.claude/settings.json` and Remote Control unavailable (see
+[agent wrapping](agent-wrapping.md)). The installer names any agent still routed
+when it finds one; recover with `cstman disable --all` after reinstalling the
+CLI, or delete those two keys by hand.
+
+These commands do not delete local usage, CCR, or account state. Review
+[`SECURITY.md`](../../SECURITY.md#local-storage) before deleting
+`~/.cstman` or `~/.cstman-cloud`.
+
+## Windows notes
+
+PowerShell 5.1+ can run root installer shim. Skills CLI may need
+`--copy` when symlink creation is unavailable. Native Windows supports local
+runtime binaries; tools that need OS-level network isolation should run in
+WSL2. See [Windows fallback](../install-windows.md) for manual plugin
+recovery.

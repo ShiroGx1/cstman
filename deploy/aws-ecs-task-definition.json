@@ -1,0 +1,134 @@
+{
+  "family": "cstman-proxy",
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::REPLACE_ACCOUNT_ID:role/REPLACE_ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::REPLACE_ACCOUNT_ID:role/REPLACE_cstman_proxy_task_role_with_bedrock_InvokeModel",
+  "volumes": [
+    {
+      "name": "cstman-data"
+    },
+    {
+      "name": "cstman-tls"
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "tls-files",
+      "image": "public.ecr.aws/docker/library/busybox:1.37@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e",
+      "essential": false,
+      "user": "0",
+      "readonlyRootFilesystem": true,
+      "entryPoint": ["sh", "-c"],
+      "command": [
+        "umask 277 && printf '%s' \"$TLS_CERT\" > /tls/tls.crt && printf '%s' \"$TLS_KEY\" > /tls/tls.key && chown 65532:65532 /tls/tls.crt /tls/tls.key"
+      ],
+      "secrets": [
+        {
+          "name": "TLS_CERT",
+          "valueFrom": "arn:aws:secretsmanager:REPLACE_REGION:REPLACE_ACCOUNT_ID:secret:cstman-proxy/tls-cert-REPLACE_SUFFIX"
+        },
+        {
+          "name": "TLS_KEY",
+          "valueFrom": "arn:aws:secretsmanager:REPLACE_REGION:REPLACE_ACCOUNT_ID:secret:cstman-proxy/tls-key-REPLACE_SUFFIX"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "cstman-tls",
+          "containerPath": "/tls",
+          "readOnly": false
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/cstman-proxy",
+          "awslogs-region": "REPLACE_REGION",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    },
+    {
+      "name": "cstman-proxy",
+      "image": "ghcr.io/juliusbrussee/cstman-proxy:bin-v2.1.0@sha256:da293df3c6929c7b31eba580f7af74da0448e83a55a973cca86e81041877d0bb",
+      "essential": true,
+      "dependsOn": [
+        {
+          "containerName": "tls-files",
+          "condition": "SUCCESS"
+        }
+      ],
+      "portMappings": [
+        {
+          "containerPort": 8787,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "AWS_REGION",
+          "value": "REPLACE_REGION"
+        },
+        {
+          "name": "CSTMAN_MODE",
+          "value": "record"
+        },
+        {
+          "name": "CSTMAN_MIDDLEWARE_MODE",
+          "value": "compress"
+        },
+        {
+          "name": "CSTMAN_TLS_CERT_FILE",
+          "value": "/etc/cstman/tls/tls.crt"
+        },
+        {
+          "name": "CSTMAN_TLS_KEY_FILE",
+          "value": "/etc/cstman/tls/tls.key"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "CSTMAN_AUTH_TOKEN",
+          "valueFrom": "arn:aws:secretsmanager:REPLACE_REGION:REPLACE_ACCOUNT_ID:secret:cstman-proxy/auth-token-REPLACE_SUFFIX"
+        },
+        {
+          "name": "CSTMAN_MIDDLEWARE_DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:REPLACE_REGION:REPLACE_ACCOUNT_ID:secret:cstman-proxy/middleware-database-url-REPLACE_SUFFIX"
+        },
+        {
+          "name": "CSTMAN_MIDDLEWARE_ENCRYPTION_KEY",
+          "valueFrom": "arn:aws:secretsmanager:REPLACE_REGION:REPLACE_ACCOUNT_ID:secret:cstman-proxy/middleware-encryption-key-REPLACE_SUFFIX"
+        },
+        {
+          "name": "CAVE_POSTGRES_CA_CERT",
+          "valueFrom": "arn:aws:secretsmanager:REPLACE_REGION:REPLACE_ACCOUNT_ID:secret:cstman-proxy/rds-ca-bundle-REPLACE_SUFFIX"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "cstman-data",
+          "containerPath": "/data",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "cstman-tls",
+          "containerPath": "/etc/cstman/tls",
+          "readOnly": true
+        }
+      ],
+      "user": "65532:65532",
+      "readonlyRootFilesystem": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/cstman-proxy",
+          "awslogs-region": "REPLACE_REGION",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
